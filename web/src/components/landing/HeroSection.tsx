@@ -155,58 +155,40 @@ export default function HeroSection({ language }: HeroSectionProps) {
             </motion.p>
           </motion.div>
 
-          {/* Right Visual - Interactive Robot */}
-          <div
-            className="relative w-full cursor-pointer"
-            onMouseEnter={() => {
-              handControls.start({
-                y: [-8, 8, -8],
-                rotate: [-3, 3, -3],
-                x: [-2, 2, -2],
-                transition: {
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  times: [0, 0.5, 1],
-                },
-              })
-            }}
-            onMouseLeave={() => {
-              handControls.start({
-                y: 0,
-                rotate: 0,
-                x: 0,
-                transition: {
-                  duration: 0.6,
-                  ease: 'easeOut',
-                },
-              })
-            }}
+          {/* Right Visual - AI Trading K-Line */}
+          <motion.div
+            className="relative w-full flex justify-center items-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            {/* Background Layer */}
-            <motion.img
-              src="/images/hand-bg.png"
-              alt="NOFX Platform Background"
-              className="w-full opacity-90"
-              style={{ opacity, scale }}
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            />
-
-            {/* Hand Layer - Animated */}
-            <motion.img
-              src="/images/hand.png"
-              alt="Robot Hand"
-              className="absolute top-0 left-0 w-full"
-              style={{ opacity }}
-              animate={handControls}
-              initial={{ y: 0, rotate: 0, x: 0 }}
-              whileHover={{
-                scale: 1.05,
-                transition: { type: 'spring', stiffness: 400 },
+            <motion.div
+              animate={{
+                y: [-10, 10, -10],
               }}
-            />
-          </div>
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="relative w-full max-w-lg"
+            >
+              {/* Glow Effect */}
+              <div
+                className="absolute inset-0 blur-3xl opacity-30"
+                style={{
+                  background: 'radial-gradient(circle, var(--brand-yellow) 0%, transparent 70%)',
+                  transform: 'scale(0.8)',
+                }}
+              />
+
+              <img
+                src="/images/ai-trading-kline.svg"
+                alt="AI Trading Analysis"
+                className="w-full h-auto relative z-10 drop-shadow-2xl"
+              />
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>

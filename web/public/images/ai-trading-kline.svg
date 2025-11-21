@@ -1,0 +1,71 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#0B0E14"/>
+  <path d="M0 0H800V600H0V0Z" fill="url(#paint0_radial_1)"/>
+  
+  <!-- Grid Background -->
+  <mask id="grid-mask">
+    <rect width="800" height="600" fill="white"/>
+    <path d="M0 100H800M0 200H800M0 300H800M0 400H800M0 500H800" stroke="black" stroke-width="1"/>
+    <path d="M100 0V600M200 0V600M300 0V600M400 0V600M500 0V600M600 0V600M700 0V600" stroke="black" stroke-width="1"/>
+  </mask>
+  <rect width="800" height="600" fill="url(#paint1_linear_1)" mask="url(#grid-mask)" opacity="0.1"/>
+
+  <!-- Abstract K-Lines -->
+  <g filter="url(#filter0_f_1)">
+    <rect x="150" y="350" width="20" height="100" rx="2" fill="#F0B90B" fill-opacity="0.2"/>
+    <rect x="158" y="320" width="4" height="160" rx="2" fill="#F0B90B" fill-opacity="0.2"/>
+    
+    <rect x="200" y="280" width="20" height="120" rx="2" fill="#0ECB81" fill-opacity="0.2"/>
+    <rect x="208" y="250" width="4" height="180" rx="2" fill="#0ECB81" fill-opacity="0.2"/>
+
+    <rect x="250" y="300" width="20" height="80" rx="2" fill="#F6465D" fill-opacity="0.2"/>
+    <rect x="258" y="280" width="4" height="120" rx="2" fill="#F6465D" fill-opacity="0.2"/>
+  </g>
+
+  <!-- Main Chart Line -->
+  <path d="M50 450C150 450 200 300 300 320C400 340 450 200 550 220C650 240 700 100 750 120" stroke="url(#paint2_linear_1)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M50 450C150 450 200 300 300 320C400 340 450 200 550 220C650 240 700 100 750 120V600H50V450Z" fill="url(#paint3_linear_1)" fill-opacity="0.2"/>
+
+  <!-- Glowing Nodes -->
+  <circle cx="300" cy="320" r="6" fill="#F0B90B">
+    <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="550" cy="220" r="6" fill="#F0B90B">
+    <animate attributeName="r" values="6;8;6" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="750" cy="120" r="8" fill="#F0B90B">
+    <animate attributeName="r" values="8;12;8" dur="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;0.6;1" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- AI Brain Connections -->
+  <path d="M300 320L550 220L750 120" stroke="white" stroke-opacity="0.1" stroke-dasharray="4 4"/>
+  <circle cx="425" cy="270" r="2" fill="white" fill-opacity="0.5"/>
+  <circle cx="650" cy="170" r="2" fill="white" fill-opacity="0.5"/>
+
+  <defs>
+    <radialGradient id="paint0_radial_1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(400 300) rotate(90) scale(300 400)">
+      <stop stop-color="#1E2329"/>
+      <stop offset="1" stop-color="#0B0E14"/>
+    </radialGradient>
+    <linearGradient id="paint1_linear_1" x1="400" y1="0" x2="400" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2B3139"/>
+      <stop offset="1" stop-color="#0B0E14" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="paint2_linear_1" x1="50" y1="450" x2="750" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F0B90B"/>
+      <stop offset="1" stop-color="#FCD535"/>
+    </linearGradient>
+    <linearGradient id="paint3_linear_1" x1="400" y1="120" x2="400" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F0B90B"/>
+      <stop offset="1" stop-color="#F0B90B" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="filter0_f_1" x="100" y="200" width="200" height="300" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="10" result="effect1_foregroundBlur_1"/>
+    </filter>
+  </defs>
+</svg>
