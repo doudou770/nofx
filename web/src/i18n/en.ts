@@ -594,11 +594,21 @@ export const en = {
 
   // Footer Section
   futureStandardAI: 'The Intelligent Signal Marketplace.',
-  links: 'Links',
-  resources: 'Resources',
-  documentation: 'Documentation',
-  supporters: 'Supporters',
-  strategicInvestment: '(Strategic Investment)',
+  platform: 'Platform',
+  signalMarketplace: 'Signal Marketplace',
+  pricing: 'Pricing',
+  successStories: 'Success Stories',
+  support: 'Support',
+  helpCenter: 'Help Center',
+  becomeProvider: 'Become a Provider',
+  apiDocumentation: 'API Documentation',
+  ecosystem: 'Ecosystem',
+  affiliateProgram: 'Affiliate Program',
+  supportedExchanges: 'Supported Exchanges',
+  institutionalPartners: 'Institutional Partners',
+  footerCopyright: '© 2025 Equinai Inc. All rights reserved.',
+  privacyPolicy: 'Privacy Policy',
+  termsOfService: 'Terms of Service',
 
   // Login Modal
   accessNofxPlatform: 'Access Equinai Platform',

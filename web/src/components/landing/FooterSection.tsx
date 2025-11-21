@@ -28,12 +28,13 @@ export default function FooterSection({ language }: FooterSectionProps) {
 
         {/* Multi-link columns */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-8">
+          {/* Column 1: Platform */}
           <div>
             <h3
               className="text-sm font-semibold mb-3"
               style={{ color: '#EAECEF' }}
             >
-              {t('links', language)}
+              {t('platform', language)}
             </h3>
             <ul className="space-y-2 text-sm" style={{ color: '#848E9C' }}>
               <li>
@@ -43,17 +44,17 @@ export default function FooterSection({ language }: FooterSectionProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  GitHub
+                  {t('signalMarketplace', language)}
                 </a>
               </li>
               <li>
                 <a
                   className="hover:text-[#F0B90B]"
-                  href="https://t.me/nofx_dev_community"
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Telegram
+                  {t('pricing', language)}
                 </a>
               </li>
               <li>
@@ -63,89 +64,81 @@ export default function FooterSection({ language }: FooterSectionProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  X (Twitter)
+                  {t('successStories', language)}
                 </a>
               </li>
             </ul>
           </div>
 
+          {/* Column 2: Support */}
           <div>
             <h3
               className="text-sm font-semibold mb-3"
               style={{ color: '#EAECEF' }}
             >
-              {t('resources', language)}
+              {t('support', language)}
             </h3>
             <ul className="space-y-2 text-sm" style={{ color: '#848E9C' }}>
               <li>
                 <a
                   className="hover:text-[#F0B90B]"
-                  href="https://github.com/tinkle-community/nofx/blob/main/README.md"
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {t('documentation', language)}
+                  {t('helpCenter', language)}
                 </a>
               </li>
               <li>
                 <a
                   className="hover:text-[#F0B90B]"
-                  href="https://github.com/tinkle-community/nofx/issues"
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Issues
+                  {t('becomeProvider', language)}
                 </a>
               </li>
               <li>
                 <a
                   className="hover:text-[#F0B90B]"
-                  href="https://github.com/tinkle-community/nofx/pulls"
+                  href="https://github.com/tinkle-community/nofx"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Pull Requests
+                  {t('apiDocumentation', language)}
                 </a>
               </li>
             </ul>
           </div>
 
+          {/* Column 3: Ecosystem */}
           <div>
             <h3
               className="text-sm font-semibold mb-3"
               style={{ color: '#EAECEF' }}
             >
-              {t('supporters', language)}
+              {t('ecosystem', language)}
             </h3>
             <ul className="space-y-2 text-sm" style={{ color: '#848E9C' }}>
               <li>
                 <a
                   className="hover:text-[#F0B90B]"
-                  href="https://www.asterdex.com/en/referral/fdfc0e"
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Aster DEX
+                  {t('affiliateProgram', language)}
                 </a>
               </li>
               <li>
                 <a
                   className="hover:text-[#F0B90B]"
-                  href="https://www.maxweb.red/join?ref=NOFXAI"
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Binance
-                </a>
-              </li>
-              <li>
-                <a
-                  className="hover:text-[#F0B90B]"
-                  href="https://hyperliquid.xyz/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Hyperliquid
+                  {t('supportedExchanges', language)}
                 </a>
               </li>
               <li>
@@ -155,26 +148,33 @@ export default function FooterSection({ language }: FooterSectionProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Amber.ac{' '}
-                  <span className="opacity-70">
-                    {t('strategicInvestment', language)}
-                  </span>
+                  {t('institutionalPartners', language)}
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom note (kept subtle) */}
+        {/* Bottom note */}
         <div
-          className="pt-6 mt-8 text-center text-xs"
+          className="pt-6 mt-8 text-center text-xs flex flex-col md:flex-row justify-between items-center gap-4"
           style={{
             color: 'var(--text-tertiary)',
             borderTop: '1px solid var(--panel-border)',
           }}
         >
-          <p>{t('footerTitle', language)}</p>
-          <p className="mt-1">{t('footerWarning', language)}</p>
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            <p>{t('footerCopyright', language)}</p>
+            <div className="flex gap-4">
+              <a href="#" className="hover:text-[#F0B90B]">
+                {t('privacyPolicy', language)}
+              </a>
+              <a href="#" className="hover:text-[#F0B90B]">
+                {t('termsOfService', language)}
+              </a>
+            </div>
+          </div>
+          <p>{t('footerWarning', language)}</p>
         </div>
       </div>
     </footer>
