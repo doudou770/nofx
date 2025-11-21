@@ -75,7 +75,7 @@ function parseManualMarkers(content) {
             for (let j = i + 1; j < lines.length; j++) {
                 const nextLine = lines[j].trim();
                 if (nextLine && !nextLine.startsWith('//')) {
-                    // Extract key name from line like: "keyName": 'value',
+                    // Extract key name from line like: "keyName": 'value' or keyName: 'value'
                     const match = nextLine.match(/^"?(\w+)"?:/);
                     if (match) {
                         manualKeys.set(match[1], line); // Store the full comment line with indentation
@@ -194,6 +194,7 @@ async function translateBatch(texts, targetLangCode) {
 }
 
 // Convert object to formatted string with preserved @manual markers
+// Matches the source file format: unquoted keys, single quotes
 function objectToFormattedString(obj, manualKeys, indent = 2) {
     const lines = [];
     const spaces = ' '.repeat(indent);
@@ -213,12 +214,24 @@ function objectToFormattedString(obj, manualKeys, indent = 2) {
             lines.push(`${spaces}${trimmedComment}`);
         }
 
+        // Determine if key needs quotes (contains special chars or starts with number)
+        const needsQuotes = /[^a-zA-Z0-9_$]/.test(key) || /^[0-9]/.test(key);
+        const formattedKey = needsQuotes ? `'${key}'` : key;
+
         // Format the key-value pair
         if (typeof value === 'object' && value !== null) {
-            lines.push(`${spaces}"${key}": ${objectToFormattedString(value, manualKeys, indent + 2)}${isLast ? '' : ','}`);
+            lines.push(`${spaces}${formattedKey}: ${objectToFormattedString(value, manualKeys, indent + 2)}${isLast ? '' : ','}`);
         } else {
-            const jsonValue = JSON.stringify(value);
-            lines.push(`${spaces}"${key}": ${jsonValue}${isLast ? '' : ','}`);
+            // Use single quotes for strings, preserve other types
+            let formattedValue;
+            if (typeof value === 'string') {
+                // Escape single quotes and backslashes in the string
+                const escapedValue = value.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                formattedValue = `'${escapedValue}'`;
+            } else {
+                formattedValue = JSON.stringify(value);
+            }
+            lines.push(`${spaces}${formattedKey}: ${formattedValue}${isLast ? '' : ','}`);
         }
     });
 
