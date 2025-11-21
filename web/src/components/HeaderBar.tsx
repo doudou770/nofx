@@ -68,7 +68,7 @@ export default function HeaderBar({
           to="/"
           className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
         >
-          <img src="/icons/eq.svg" alt="NOFX Logo" className="w-8 h-8" />
+          <img src="/icons/eq.svg" alt="Equinai Logo" className="w-8 h-8" />
           <span
             className="text-xl font-bold"
             style={{ color: 'var(--brand-yellow)' }}

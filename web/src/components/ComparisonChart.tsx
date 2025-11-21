@@ -243,12 +243,12 @@ export function ComparisonChart({ traders }: ComparisonChartProps) {
   const currentGap =
     displayData.length > 0
       ? (() => {
-          const lastPoint = displayData[displayData.length - 1]
-          const values = traders.map(
-            (t) => lastPoint[`${t.trader_id}_pnl_pct`] || 0
-          )
-          return Math.abs(values[0] - values[1])
-        })()
+        const lastPoint = displayData[displayData.length - 1]
+        const values = traders.map(
+          (t) => lastPoint[`${t.trader_id}_pnl_pct`] || 0
+        )
+        return Math.abs(values[0] - values[1])
+      })()
       : 0
 
   return (
@@ -274,7 +274,7 @@ export function ComparisonChart({ traders }: ComparisonChartProps) {
             fontFamily: 'monospace',
           }}
         >
-          NOFX
+          {t('appTitle', language)}
         </div>
         <ResponsiveContainer width="100%" height={520}>
           <LineChart

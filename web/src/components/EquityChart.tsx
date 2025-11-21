@@ -224,11 +224,10 @@ export function EquityChart({ traderId }: EquityChartProps) {
                   background: isProfit
                     ? 'rgba(14, 203, 129, 0.1)'
                     : 'rgba(246, 70, 93, 0.1)',
-                  border: `1px solid ${
-                    isProfit
+                  border: `1px solid ${isProfit
                       ? 'rgba(14, 203, 129, 0.2)'
                       : 'rgba(246, 70, 93, 0.2)'
-                  }`,
+                    }`,
                 }}
               >
                 {isProfit ? (
@@ -261,10 +260,10 @@ export function EquityChart({ traderId }: EquityChartProps) {
             style={
               displayMode === 'dollar'
                 ? {
-                    background: '#F0B90B',
-                    color: '#000',
-                    boxShadow: '0 2px 8px rgba(240, 185, 11, 0.4)',
-                  }
+                  background: '#F0B90B',
+                  color: '#000',
+                  boxShadow: '0 2px 8px rgba(240, 185, 11, 0.4)',
+                }
                 : { background: 'transparent', color: '#848E9C' }
             }
           >
@@ -276,10 +275,10 @@ export function EquityChart({ traderId }: EquityChartProps) {
             style={
               displayMode === 'percent'
                 ? {
-                    background: '#F0B90B',
-                    color: '#000',
-                    boxShadow: '0 2px 8px rgba(240, 185, 11, 0.4)',
-                  }
+                  background: '#F0B90B',
+                  color: '#000',
+                  boxShadow: '0 2px 8px rgba(240, 185, 11, 0.4)',
+                }
                 : { background: 'transparent', color: '#848E9C' }
             }
           >
@@ -311,7 +310,7 @@ export function EquityChart({ traderId }: EquityChartProps) {
             fontFamily: 'monospace',
           }}
         >
-          NOFX
+          {t('loading', language)}
         </div>
         <ResponsiveContainer width="100%" height={280}>
           <LineChart

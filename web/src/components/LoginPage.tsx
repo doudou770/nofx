@@ -114,7 +114,7 @@ export function LoginPage() {
           <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
             <img
               src="/icons/eq.svg"
-              alt="NoFx Logo"
+              alt="Equinai Logo"
               className="w-16 h-16 object-contain"
             />
           </div>
@@ -122,7 +122,7 @@ export function LoginPage() {
             className="text-2xl font-bold"
             style={{ color: 'var(--brand-light-gray)' }}
           >
-            登录 NOFX
+            {t('appTitle', language)}
           </h1>
           <p
             className="text-sm mt-2"

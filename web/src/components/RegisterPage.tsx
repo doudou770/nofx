@@ -120,7 +120,7 @@ export function RegisterPage() {
           <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
             <img
               src="/icons/eq.svg"
-              alt="NoFx Logo"
+              alt="Equinai Logo"
               className="w-16 h-16 object-contain"
             />
           </div>

@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 import { Outlet, Link } from 'react-router-dom'
 import { Container } from '../components/Container'
 import { useLanguage } from '../contexts/LanguageContext'
+import { t, Language } from '../i18n/translations'
 
 interface AuthLayoutProps {
   children?: ReactNode
@@ -28,7 +29,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           >
             <img src="/icons/eq.svg" alt="NOFX Logo" className="w-8 h-8" />
             <span className="text-xl font-bold" style={{ color: '#F0B90B' }}>
-              NOFX
+              {t('appTitle', language)}
             </span>
           </Link>
 
