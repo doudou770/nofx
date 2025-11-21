@@ -574,21 +574,21 @@ export const en = {
   howToStart: 'How to Get Started with Equinai',
   fourSimpleSteps:
     'Four simple steps to start your AI automated trading journey',
-  step1Title: 'Clone GitHub Repository',
+  step1Title: 'Create Your Account',
   step1Desc:
-    'git clone https://github.com/tinkle-community/Equinai and switch to dev branch to test new features.',
-  step2Title: 'Configure Environment',
+    'Sign up in seconds to access the Equinai Dashboard. No coding required. Instantly view real-time market data and available AI strategies.',
+  step2Title: 'Connect Your Exchange',
   step2Desc:
-    'Frontend setup for exchange APIs (like Binance, Hyperliquid), AI models and custom prompts.',
-  step3Title: 'Deploy & Run',
+    'Securely link your exchange accounts (like Binance, OKX, Hyperliquid) via API keys. We strictly require "Trade-Only" permissions—your funds remain safe in your wallet.',
+  step3Title: 'Select & Subscribe',
   step3Desc:
-    'One-click Docker deployment, start AI agents. Note: High-risk market, only test with money you can afford to lose.',
-  step4Title: 'Optimize & Contribute',
+    'Browse the Signal Marketplace. Choose between Equinai Official Agents or verified Third-Party Signals based on historical ROI and risk preference.',
+  step4Title: 'Activate & Automate',
   step4Desc:
-    'Monitor trading, submit PRs to improve framework. Join Telegram to share strategies.',
+    'Toggle the switch to start. The AI automatically executes trades 24/7. Monitor your portfolio growth and performance logs in real-time from the dashboard.',
   importantRiskWarning: 'Important Risk Warning',
   riskWarningText:
-    'Dev branch is unstable, do not use funds you cannot afford to lose. Equinai is non-custodial, no official strategies. Trading involves risks, invest carefully.',
+    'Trading involves significant risk. While AI assists in decision-making, past performance does not guarantee future results. Equinai provides the execution tool and signal aggregation, but market volatility is beyond control. Please invest rationally and only trade with funds you can afford to lose.',
 
   // Community Section (testimonials are kept as-is since they are quotes)
 

@@ -1,8 +1,9 @@
 export const zh = {
-
   // @manual
   appTitle: 'Equinai',
+  // @manual
   subtitle: '多AI模型交易平台',
+  // @manual
   aiTraders: 'AI交易员',
   details: '详细信息',
   // @manual
@@ -279,15 +280,13 @@ export const zh = {
   // @manual
   hyperliquidAgentWalletTitle: 'Hyperliquid 代理钱包配置',
   // @manual
-  hyperliquidAgentWalletDesc:
-    '使用代理钱包安全交易：代理钱包用于签名（余额~0），主钱包持有资金（永不暴露私钥）',
+  hyperliquidAgentWalletDesc: '使用代理钱包安全交易：代理钱包用于签名（余额~0），主钱包持有资金（永不暴露私钥）',
   // @manual
   hyperliquidAgentPrivateKey: '代理私钥',
   // @manual
   enterHyperliquidAgentPrivateKey: '输入代理钱包私钥',
   // @manual
-  hyperliquidAgentPrivateKeyDesc:
-    '代理钱包私钥，用于签名交易（为了安全应保持余额接近0）',
+  hyperliquidAgentPrivateKeyDesc: '代理钱包私钥，用于签名交易（为了安全应保持余额接近0）',
   hyperliquidMainWalletAddress: '主钱包地址',
   enterHyperliquidMainWalletAddress: '输入主钱包地址',
   hyperliquidMainWalletAddressDesc: '保存交易资金的主钱包地址（切勿暴露其私钥）',
@@ -323,16 +322,14 @@ export const zh = {
   // @manual
   twoStageStage2Hint: '将扰动字符串粘贴到任意位置后，再完成私钥输入。',
   // @manual
-  twoStageClipboardSuccess:
-    '扰动字符串已复制。请在完成前在任意文本处粘贴一次以迷惑剪贴板记录。',
+  twoStageClipboardSuccess: '扰动字符串已复制。请在完成前在任意文本处粘贴一次以迷惑剪贴板记录。',
   // @manual
-  twoStageClipboardReminder:
-    '记得在提交前粘贴一次扰动字符串，降低剪贴板泄漏风险。', twoStageClipboardManual: '自动复制失败。请手动复制下面的混淆字符串。',
+  twoStageClipboardReminder: '记得在提交前粘贴一次扰动字符串，降低剪贴板泄漏风险。',
+  twoStageClipboardManual: '自动复制失败。请手动复制下面的混淆字符串。',
   twoStageBack: '返回',
   twoStageSubmit: '确认',
   // @manual
-  twoStageInvalidFormat:
-    '私钥格式不正确，应为 {length} 位十六进制字符（可选 0x 前缀）。',
+  twoStageInvalidFormat: '私钥格式不正确，应为 {length} 位十六进制字符（可选 0x 前缀）。',
   testnetDescription: '可连接交易所测试环境进行模拟交易',
   securityWarning: '安全警告',
   saveConfiguration: '保存配置',
@@ -357,8 +354,7 @@ export const zh = {
   // @manual
   tradingSymbols: '交易币种',
   // @manual
-  tradingSymbolsPlaceholder:
-    '输入币种，逗号分隔（如：BTCUSDT,ETHUSDT,SOLUSDT）',
+  tradingSymbolsPlaceholder: '输入币种，逗号分隔（如：BTCUSDT,ETHUSDT,SOLUSDT）',
   // @manual
   selectSymbols: '选择币种',
   // @manual
@@ -370,8 +366,7 @@ export const zh = {
   // @manual
   confirmSelection: '确认选择',
   // @manual
-  tradingSymbolsDescription:
-    '留空 = 使用默认币种。必须以USDT结尾（如：BTCUSDT, ETHUSDT）',
+  tradingSymbolsDescription: '留空 = 使用默认币种。必须以USDT结尾（如：BTCUSDT, ETHUSDT）',
   // @manual
   btcEthLeverageValidation: 'BTC/ETH杠杆必须在1-50倍之间',
   // @manual
@@ -429,17 +424,22 @@ export const zh = {
   // @manual
   information: '说明',
   // @manual
-  signalSourceInfo1:
-    '• 信号源配置为用户级别，每个用户可以设置自己的信号源URL',
+  signalSourceInfo1: '• 信号源配置为用户级别，每个用户可以设置自己的信号源URL',
   // @manual
   signalSourceInfo2: '• 在创建交易员时可以选择是否使用这些信号源',
   // @manual
   signalSourceInfo3: '• 配置的URL将用于获取市场数据和交易信号',
+  // @manual
   editAIModel: '编辑AI模型',
+  // @manual
   addAIModel: '添加AI模型',
+  // @manual
   confirmDeleteModel: '确定要删除此AI模型配置吗？',
+  // @manual
   cannotDeleteModelInUse: '无法删除此AI模型，因为有交易员正在使用',
+  // @manual
   tradersUsing: '正在使用此配置的交易员',
+  // @manual
   pleaseDeleteTradersFirst: '请先删除或重新配置这些交易员',
   // @manual
   selectModel: '选择AI模型',
@@ -553,7 +553,7 @@ export const zh = {
   verifyOTP: '验证 OTP',
   setupTwoFactor: '设置双因素身份验证',
   setupTwoFactorDesc: '请按照以下步骤使用 Google Authenticator 确保账户安全',
-  scanQRCodeInstructions: '使用 Google Authenticator 或 Authy 扫描此 QR 码',
+  scanQRCodeInstructions: '使用 Google Authenticator 或 Authy 扫描此二维码',
   otpSecret: '或手动输入此秘密：',
   qrCodeHint: '二维码（如果扫描失败，请使用下面的秘诀）：',
   authStep1Title: '步骤 1：安装 Google Authenticator',
@@ -630,12 +630,13 @@ export const zh = {
   openSourceFeatures3: '透明的性能跟踪',
   openSourceFeatures4: '一键式自动订阅',
   multiAgentCompetition: '自适应代理智能',
-  multiAgentDesc: '多代理系统全天候监控市场，根据波动情况自动调整策略，在最大限度地提高阿尔法收益的同时，最大限度地降低风险。',
+  multiAgentDesc: '多代理系统全天候监控市场，自动调整策略以适应波动性，从而在最大限度降低风险的同时实现阿尔法最大化。',
   multiAgentFeatures1: '全天候自动执行',
   multiAgentFeatures2: '实时战略调整',
   multiAgentFeatures3: '智能风险管理',
   multiAgentFeatures4: '多资产支持（加密货币/股票）',
   secureReliableTrading: '非监护安全',
+  //@manual
   secureDesc: '您的资金从未离开过您的交易所。Equinai 通过具有严格 "仅限交易 "权限的加密 API 连接进行操作。我们执行交易，但您保留对您资产的 100% 控制权。',
   secureFeatures1: '资金留在交易所',
   secureFeatures2: '加密 API 连接',
@@ -646,7 +647,7 @@ export const zh = {
   nofxNotAnotherBot: '首先，我们将高速发展的加密货币市场作为试验场、',
   nofxDescription1: '我们正在逐步掌握股票、期货和外汇。 ',
   nofxDescription2: '',
-  nofxDescription3: '我们的核心引擎促进了 "战略达尔文主义"--在这个竞争激烈的生态系统中，只有最有利可图的企业才能获得成功。',
+  nofxDescription3: '我们的核心引擎促进了 "战略达尔文主义"--一个竞争激烈的生态系统，在这个生态系统中，只有最有利可图的企业才能获得成功。',
   nofxDescription4: '人工智能代理的生存和发展，确保您始终能获得市场上表现最佳的策略。',
   nofxDescription5: '',
   youFullControl: '100% 由您掌控',
@@ -656,16 +657,16 @@ export const zh = {
   startupMessages3: '网络控制台 http://localhost:3000',
   howToStart: '如何开始使用 Equinai',
   fourSimpleSteps: '开始人工智能自动交易之旅的四个简单步骤',
-  step1Title: '克隆 GitHub 仓库',
-  step1Desc: 'git clone https://github.com/tinkle-community/Equinai 并切换到开发分支测试新功能。',
-  step2Title: '配置环境',
-  step2Desc: '为交易所 API（如 Binance、Hyperliquid）、人工智能模型和自定义提示进行前端设置。',
-  step3Title: '部署和运行',
-  step3Desc: '一键部署 Docker，启动人工智能代理。注意：高风险市场，只能用你能承受损失的资金进行测试。',
-  step4Title: '优化和贡献',
-  step4Desc: '监控交易，提交 PR 以改进框架。加入 Telegram 分享策略。',
+  step1Title: '创建账户',
+  step1Desc: '只需几秒钟注册，即可访问 Equinai 控制面板。无需编码。即时查看实时市场数据和可用的人工智能策略。',
+  step2Title: '连接您的交换机',
+  step2Desc: '通过 API 密钥安全链接您的交易所账户（如 Binance、OKX、Hyperliquid）。我们严格要求 "仅限交易 "权限--您的资金将安全地保存在钱包中。',
+  step3Title: '选择和订阅',
+  step3Desc: '浏览信号市场。根据历史投资回报率和风险偏好，选择 Equinai 官方代理或经过验证的第三方信号。',
+  step4Title: '激活和自动化',
+  step4Desc: '拨动开关启动。人工智能全天候自动执行交易。在仪表盘上实时监控投资组合的增长和业绩日志。',
   importantRiskWarning: '重要风险警告',
-  riskWarningText: 'Dev 分支机构不稳定，请勿使用您无法承受损失的资金。Equinai 是非托管机构，没有官方策略。交易有风险，投资需谨慎。',
+  riskWarningText: '交易涉及重大风险。虽然人工智能有助于决策，但过去的表现并不能保证未来的结果。Equinai 提供执行工具和信号汇总，但市场波动是无法控制的。请理性投资，仅使用您能承受损失的资金进行交易。',
   futureStandardAI: '人工智能交易的未来标准',
   links: '链接',
   resources: '资源',
@@ -723,7 +724,7 @@ export const zh = {
   faqGithubProjectsTasks: '如何使用 GitHub 项目并领取任务？',
   faqGithubProjectsTasksAnswer: '路线图：https://github.com/orgs/EquinaiAiOS/projects/3 - 任务仪表板：https://github.com/orgs/EquinaiAiOS/projects/5 - 步骤：打开链接 → 按标签筛选（好的第一个问题/需要帮助/前端/后端） → 阅读描述和验收标准 → 评论 "分配给我 "或自行分配 → 叉开 repo → 将您的叉子的开发与上游/开发同步 → 从您的叉子的开发创建一个功能分支 → 推送到您的叉子 → 打开 PR（base：EquinaiAiOS/Equinai:dev ← 比较：您的用户名/Equinai:feature/您的主题）→引用问题（关闭 #123）并使用适当的模板。',
   faqContributePR: '如何正确提交 PR 并作出贡献？',
-  faqContributePRAnswer: '指导原则：- 分支命名： feat/......、fix/......、docs/......常规提交 - 在 PR 之前进行检查：npm --prefix web run lint &amp;&amp; npm --prefix web run build - 对于 UI 更改，请附上截图或视频短片 - 选择适当的 PR 模板（前端/后端/文档/常规） - 将 PR 从您的分叉打开到 EquinaiAiOS/Equinai:dev 并链接问题（关闭 #123） - 持续重定向到上游/开发分支；确保 CI 通过；更喜欢小而集中的 PR - 阅读 CONTRIBUTING.md 和 .github/PR_TITLE_GUIDE.md',
+  faqContributePRAnswer: '指导原则：- 分支命名： feat/......、fix/......、docs/......常规提交 - 在 PR 之前运行检查：npm --prefix web run lint &amp;&amp; npm --prefix web run build - 对于 UI 更改，请附上截图或视频短片 - 选择适当的 PR 模板（前端/后端/文档/常规） - 将 PR 从您的分叉打开到 EquinaiAiOS/Equinai:dev 并链接问题（关闭 #123） - 持续重定向到上游/开发分支；确保 CI 通过；更喜欢小而集中的 PR - 阅读 CONTRIBUTING.md 和 .github/PR_TITLE_GUIDE.md',
   faqSystemRequirements: '系统要求是什么？',
   faqSystemRequirementsAnswer: '操作系统：操作系统：Linux、macOS 或 Windows（推荐使用 Docker）；内存：至少 2GB，推荐 4GB；磁盘：1GB 用于应用程序和日志；网络：稳定的互联网连接。',
   faqNeedCoding: '我需要编码经验吗？',
@@ -749,13 +750,13 @@ export const zh = {
   faqMarginInsufficient: '误差幅度不足（代码=-2019）',
   faqMarginInsufficientAnswer: '常见原因：资金未转入期货账户；杠杆设置过高（默认 20-50x）；现有仓位使用保证金；需要先将 USDT 从现货账户转入期货账户。',
   faqHighFees: '交易费用过高',
-  faqHighFeesAnswer: 'Equinai 默认的 3 分钟扫描间隔会导致频繁交易。解决方案：将决策时间间隔延长至 5-10 分钟；优化系统提示以减少过度交易；调整杠杆以减少仓位规模。',
+  faqHighFeesAnswer: 'Equinai 默认的 3 分钟扫描间隔会导致频繁交易。解决方案：将决策时间间隔延长至 5-10 分钟；优化系统提示以减少过度交易；调整杠杆率以减少仓位规模。',
   faqNoTakeProfit: '人工智能不会关闭盈利头寸',
   faqNoTakeProfitAnswer: '人工智能可能认为这一趋势将持续下去。系统目前缺乏追踪止损功能。您可以手动平仓或调整系统提示，使获利回吐更加保守。',
   faqBinanceApiFailed: 'Binance API 调用失败（代码=-2015）',
   faqBinanceApiFailedAnswer: '错误："无效的 API 密钥、IP 或操作权限"。解决方案：将服务器 IP 添加到 Binance API 白名单；检查 API 权限（需要读取 + 期货交易）；确保使用期货 API 而非统一账户 API；VPN IP 可能不稳定。',
   faqBinancePositionMode: 'Bin 定位模式错误（代码=-4061）',
-  faqBinancePositionModeAnswer: '错误："订单的位置方与用户设置不符"。解决方案：在 Binance 期货设置中切换到对冲模式 (双向持仓)。在切换之前，您必须先关闭所有仓位。',
+  faqBinancePositionModeAnswer: '错误："订单的位置边与用户设置不符"。解决方案：在 Binance 期货设置中切换到对冲模式 (双向持仓)。在切换之前，您必须先关闭所有仓位。',
   faqPortInUse: '后台无法启动/端口已在使用中',
   faqPortInUseAnswer: '使用 "lsof -i :8080 "检查使用 8080 端口的设备，并在 .env 文件中使用 Equinai_BACKEND_PORT=8081 更改端口。',
   faqFrontendLoading: '前台永远显示 "正在加载......"。',
@@ -770,7 +771,7 @@ export const zh = {
   faqWhichModelsAnswer: 'DeepSeek（推荐使用，性价比高）、Qwen（阿里巴巴云）和自定义 OpenAI 兼容 API（可用于 OpenAI、通过代理的 Claude 或其他提供商）。',
   faqApiCosts: 'API 调用的费用是多少？',
   faqApiCostsAnswer: '取决于您的模型和决策频率：DeepSeek：每天 ~0.10-0.50 美元（1 个交易员，5 分钟间隔）；Qwen：每天 ~0.20-0.80 美元；自定义 API（如 OpenAI GPT-4）：~$2-5 每天。根据典型使用情况估算。',
-  faqMultipleModels: '可以使用多个人工智能模型吗？',
+  faqMultipleModels: '我可以使用多个人工智能模型吗？',
   faqMultipleModelsAnswer: '可以！每个交易员都可以使用不同的人工智能模型。您甚至可以对不同的模型进行 A/B 测试。',
   faqAiLearning: '人工智能会从错误中吸取教训吗？',
   faqAiLearningAnswer: '是的，在某种程度上。Equinai 在每个决策提示中都会提供历史表现反馈，让人工智能调整策略。',
@@ -809,7 +810,7 @@ export const zh = {
   environmentSteps: {
     checkTitle: '1.环境检查',
     //@manual
-    selectTitle: '2. 选择交易所',
+    selectTitle: '2. 选择交易所'
   },
   twoStageKey: {
     //@manual
@@ -830,12 +831,12 @@ export const zh = {
     backButton: '返回',
     encryptButton: '加密和提交',
     obfuscationCopied: '混淆数据复制到剪贴板',
-    obfuscationInstruction: '粘贴其他内容清除剪贴板，然后继续',
+    obfuscationInstruction: '粘贴其他内容以清除剪贴板，然后继续',
     obfuscationManual: '需要手动混淆'
   },
   errors: {
     privatekeyIncomplete: '请输入至少{expected} 个字符',
-    privatekeyInvalidFormat: '私人密钥格式无效（应为 64 个十六进制字符）',
+    privatekeyInvalidFormat: '私钥格式无效（应为 64 个十六进制字符）',
     privatekeyObfuscationFailed: '剪贴板混淆失败'
   }
 }

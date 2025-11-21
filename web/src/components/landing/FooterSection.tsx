@@ -18,7 +18,7 @@ export default function FooterSection({ language }: FooterSectionProps) {
           <img src="/icons/eq.svg" alt="NOFX Logo" className="w-8 h-8" />
           <div>
             <div className="text-lg font-bold" style={{ color: '#EAECEF' }}>
-              NOFX
+              {t('appTitle', language)}
             </div>
             <div className="text-xs" style={{ color: '#848E9C' }}>
               {t('futureStandardAI', language)}
