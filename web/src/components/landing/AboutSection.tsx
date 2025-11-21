@@ -102,13 +102,20 @@ export default function AboutSection({ language }: AboutSectionProps) {
             >
               <Typewriter
                 lines={[
-                  '$ git clone https://github.com/tinkle-community/nofx.git',
-                  '$ cd nofx',
-                  '$ chmod +x start.sh',
-                  '$ ./start.sh start --build',
-                  t('startupMessages1', language),
-                  t('startupMessages2', language),
-                  t('startupMessages3', language),
+                  '> System initialized...',
+                  '> Connecting to Signal Nexus... Connected.',
+                  '> Market Scan: BTC/USDT [Volatile]',
+                  '> AI Agent [Alpha-1]: Trend Reversal Detected.',
+                  '> Calculating Risk... Risk/Reward Ratio 1:3.',
+                  '> Executing ORDER: BUY BTC @ 98,420.',
+                  '> Order Filled. Monitoring Position...',
+                  '> ...',
+                  '> Profit Target Hit. Selling...',
+                  '> Session PnL: +$1,250.00 (ROI +4.2%)',
+                  '> _',
+                  // t('startupMessages1', language),
+                  // t('startupMessages2', language),
+                  // t('startupMessages3', language),
                 ]}
                 typingSpeed={70}
                 lineDelay={900}
