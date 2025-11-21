@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 import { translationConfig } from './translation.config.js';
 
@@ -15,18 +14,39 @@ const i18nDir = path.join(__dirname, '../src/i18n');
 const sourcePath = path.join(i18nDir, `${translationConfig.sourceLang}.ts`);
 
 // Check for API key
-if (!process.env.GEMINI_API_KEY) {
-    console.error('❌ Error: GEMINI_API_KEY not found in .env file');
-    console.log('Please add your Gemini API key to .env:');
-    console.log('GEMINI_API_KEY=your_api_key_here');
+if (!process.env.DEEPL_API_KEY) {
+    console.error('❌ Error: DEEPL_API_KEY not found in .env file');
+    console.log('Please add your DeepL API key to .env:');
+    console.log('DEEPL_API_KEY=your_api_key_here');
+    console.log('\nGet your free API key at: https://www.deepl.com/pro-api');
     process.exit(1);
 }
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-//https://aistudio.google.com/usage?project=gen-lang-client-0775270064&timeRange=last-28-days&tab=rate-limit
-//gemini-2.0-flash-live
-//models/gemini-2.5-flash
-const model = genAI.getGenerativeModel({ model: 'models/gemini-2.5-flash' });
+// DeepL API configuration
+const DEEPL_API_KEY = process.env.DEEPL_API_KEY;
+const DEEPL_API_URL = DEEPL_API_KEY.endsWith(':fx')
+    ? 'https://api-free.deepl.com/v2/translate'  // Free API
+    : 'https://api.deepl.com/v2/translate';       // Pro API
+
+// Language code mapping (DeepL uses different codes)
+const DEEPL_LANG_MAP = {
+    'zh': 'ZH',           // Chinese (simplified)
+    'ja': 'JA',           // Japanese
+    'ko': 'KO',           // Korean
+    'es': 'ES',           // Spanish
+    'fr': 'FR',           // French
+    'de': 'DE',           // German
+    'pt': 'PT-BR',        // Portuguese (Brazilian)
+    'ru': 'RU',           // Russian
+    'it': 'IT',           // Italian
+    'nl': 'NL',           // Dutch
+    'pl': 'PL',           // Polish
+    'tr': 'TR',           // Turkish
+    'ar': 'AR',           // Arabic
+    'vi': 'VI',           // Vietnamese
+    'th': 'TH',           // Thai
+    'id': 'ID',           // Indonesian
+};
 
 // Get target languages from command line args or use all configured languages
 const args = process.argv.slice(2);
@@ -121,42 +141,50 @@ function getTranslationDiff(sourceObj, targetObj, manualKeys = new Set()) {
     return { diff, skipped };
 }
 
-// Translate a batch of strings using Gemini
-async function translateBatch(texts, targetLangName) {
-    const prompt = `You are a professional translator. Translate the following English text to ${targetLangName}.
-
-IMPORTANT RULES:
-1. Preserve all placeholders like {count}, {gap}, {symbol}, {length}, {expected}, {origin}, {protocol}, {name}, {param} exactly as they are
-2. Preserve all HTML tags and markdown formatting
-3. Keep technical terms and brand names (like NOFX, GitHub, API, Binance, Gemini, etc.) unchanged
-4. Maintain the same tone and style
-5. Return ONLY the translations in the same order as input, separated by "|||"
-6. Do not add explanations or notes
-
-Input texts (separated by "|||"):
-${texts.join(' ||| ')}
-
-Translations:`;
+// Translate a batch of strings using DeepL API
+async function translateBatch(texts, targetLangCode) {
+    const deeplLangCode = DEEPL_LANG_MAP[targetLangCode] || targetLangCode.toUpperCase();
 
     try {
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const translated = response.text().trim();
+        // Protect placeholders by wrapping them in XML tags
+        const protectedTexts = texts.map(text => {
+            // Replace {placeholder} with <keep>{placeholder}</keep>
+            return text.replace(/\{([a-zA-Z_]+)\}/g, '<keep>{$1}</keep>');
+        });
 
-        // Split by delimiter and clean up
-        const translations = translated.split('|||').map(t => t.trim());
+        // DeepL API accepts multiple texts in one request
+        const params = new URLSearchParams();
+        params.append('auth_key', DEEPL_API_KEY);
+        params.append('source_lang', 'EN');
+        params.append('target_lang', deeplLangCode);
+        params.append('preserve_formatting', '1');
+        params.append('tag_handling', 'xml');
+        params.append('ignore_tags', 'keep');
 
-        if (translations.length !== texts.length) {
-            console.warn('⚠️  Warning: Translation count mismatch. Retrying individually...');
-            const individualTranslations = [];
-            for (const text of texts) {
-                const singleResult = await translateBatch([text], targetLangName);
-                individualTranslations.push(singleResult[0]);
-            }
-            return individualTranslations;
+        // Add all texts
+        protectedTexts.forEach(text => {
+            params.append('text', text);
+        });
+
+        const response = await fetch(DEEPL_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString(),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`DeepL API error: ${response.status} - ${errorText}`);
         }
 
-        return translations;
+        const data = await response.json();
+
+        // Remove protection tags from translated texts
+        return data.translations.map(t => {
+            return t.text.replace(/<keep>(\{[a-zA-Z_]+\})<\/keep>/g, '$1');
+        });
     } catch (error) {
         console.error('Translation error:', error);
         throw error;
@@ -211,8 +239,8 @@ async function updateLanguage(targetLang) {
 
     console.log(`📝 Found ${diffKeys.length} items to translate`);
 
-    // Translate in batches of 10 to avoid rate limits
-    const batchSize = 10;
+    // Translate in batches of 50 (DeepL allows up to 50 texts per request)
+    const batchSize = 50;
     const translations = {};
 
     for (let i = 0; i < diffKeys.length; i += batchSize) {
@@ -221,7 +249,7 @@ async function updateLanguage(targetLang) {
 
         console.log(`🌐 Translating batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(diffKeys.length / batchSize)}...`);
 
-        const translated = await translateBatch(textsToTranslate, targetLang.name);
+        const translated = await translateBatch(textsToTranslate, targetLang.code);
 
         batch.forEach((key, index) => {
             translations[key] = translated[index];
@@ -229,7 +257,7 @@ async function updateLanguage(targetLang) {
 
         // Small delay to avoid rate limiting
         if (i + batchSize < diffKeys.length) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
     }
 
@@ -266,7 +294,7 @@ async function updateLanguage(targetLang) {
 
 // Main translation function
 async function translateAll() {
-    console.log('🚀 Starting multi-language translation...');
+    console.log('🚀 Starting multi-language translation with DeepL...');
     console.log(`📖 Source language: ${translationConfig.sourceLang}`);
     console.log(`🎯 Target languages: ${targetLangs.map(l => l.code).join(', ')}\n`);
 

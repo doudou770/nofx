@@ -1,12 +1,14 @@
 # Auto-Translation Tool
 
-自动翻译工具,使用 Gemini API 将英文翻译为多种语言,让你只需维护英文语言包。
+自动翻译工具,使用 DeepL API 将英文翻译为多种语言,让你只需维护英文语言包。
 
 ## 设置步骤
 
-### 1. 获取 Gemini API Key
+### 1. 获取 DeepL API Key
 
-访问 [Google AI Studio](https://aistudio.google.com/app/apikey) 获取你的 API key。
+访问 [DeepL API](https://www.deepl.com/pro-api) 注册并获取你的 API key。
+
+> **提示**: DeepL 提供免费版 API,每月可翻译 500,000 字符,足够大多数项目使用。
 
 ### 2. 配置环境变量
 
@@ -19,8 +21,10 @@ cp .env.example .env
 然后编辑 `.env` 文件,添加你的 API key:
 
 ```env
-GEMINI_API_KEY=your_actual_api_key_here
+DEEPL_API_KEY=your_actual_api_key_here
 ```
+
+> **注意**: 免费版 API key 以 `:fx` 结尾,脚本会自动识别并使用正确的 API 端点。
 
 ### 3. 运行翻译
 
@@ -98,70 +102,32 @@ npm run translate
 
 ✅ **多语言支持**: 同时翻译多个目标语言  
 ✅ **智能差异检测**: 只翻译新增或修改的条目  
-✅ **保留格式**: 自动保留占位符如 `{count}`, `{gap}` 等  
-✅ **批量处理**: 每次处理 10 个条目,避免 API 限流  
+✅ **占位符保护**: 自动保护 `{count}`, `{gap}`, `{length}` 等变量不被翻译  
+✅ **批量处理**: 每次处理 50 个条目,提高翻译效率  
 ✅ **嵌套对象支持**: 正确处理多层嵌套的翻译对象  
 ✅ **选择性翻译**: 可以只翻译特定语言  
+✅ **手动翻译保护**: 使用 `// @manual` 标记保护人工翻译  
 
-## 使用示例
+## 占位符保护
 
-### 翻译所有语言
-```bash
-npm run translate
-```
+脚本会自动保护所有 `{变量名}` 格式的占位符,确保它们不会被翻译。
 
-输出:
-```
-🚀 Starting multi-language translation...
-📖 Source language: en
-🎯 Target languages: zh
+### 工作原理
 
-============================================================
-🌐 Translating to Simplified Chinese (简体中文) (zh)
-============================================================
-🔍 Reading translation files...
-🔎 Finding differences...
-📝 Found 5 items to translate
-🌐 Translating batch 1/1...
-✅ Translation complete for zh!
-📄 Updated 5 translations in zh.ts
+1. **翻译前**: 将 `{count}` 包装为 `<keep>{count}</keep>`
+2. **DeepL 翻译**: DeepL 会忽略 `<keep>` 标签内的内容
+3. **翻译后**: 移除保护标签,恢复原始的 `{count}` 格式
 
-============================================================
-📊 Translation Summary
-============================================================
-✅ Successful: 1
+### 支持的占位符格式
 
-🎉 All done!
-```
-
-### 只翻译特定语言
-```bash
-# 只翻译中文
-npm run translate -- zh
-
-# 翻译日语和韩语
-npm run translate -- ja ko
-```
-
-## 配置文件说明
-
-`scripts/translation.config.js`:
-
-```javascript
-export const translationConfig = {
-  // 源语言(你手动维护的语言)
-  sourceLang: 'en',
-  
-  // 目标语言列表
-  targetLangs: [
-    {
-      code: 'zh',           // 语言代码
-      name: 'Simplified Chinese (简体中文)',  // 完整名称(用于翻译提示)
-      file: 'zh.ts'         // 文件名
-    },
-    // 添加更多语言...
-  ]
-};
+```typescript
+// ✅ 这些占位符会被自动保护
+'You have {count} items'
+'Gap: {gap}%'
+'Length: {length}'
+'Symbol: {symbol}'
+'Origin: {origin}'
+'Protocol: {protocol}'
 ```
 
 ## 保护手动翻译
@@ -217,124 +183,150 @@ export const zh = {
 ❌ **不建议标记的内容**:
 - 通用的简单翻译
 - 经常变化的内容
-- 占位符和变量
+- 占位符和变量(已自动保护)
+
+## 使用示例
+
+### 翻译所有语言
+```bash
+npm run translate
+```
+
+输出:
+```
+🚀 Starting multi-language translation with DeepL...
+📖 Source language: en
+🎯 Target languages: zh, ja
+
+============================================================
+🌐 Translating to Simplified Chinese (简体中文) (zh)
+============================================================
+🔍 Reading translation files...
+🔎 Finding differences...
+📝 Found 5 items to translate
+🌐 Translating batch 1/1...
+✅ Translation complete for zh!
+📄 Updated 5 translations in zh.ts
+
+============================================================
+🌐 Translating to Japanese (日本語) (ja)
+============================================================
+🔍 Reading translation files...
+🔎 Finding differences...
+📝 Found 5 items to translate
+🌐 Translating batch 1/1...
+✅ Translation complete for ja!
+📄 Updated 5 translations in ja.ts
+
+============================================================
+📊 Translation Summary
+============================================================
+✅ Successful: 2
+
+🎉 All done!
+```
+
+### 只翻译特定语言
+```bash
+# 只翻译中文
+npm run translate -- zh
+
+# 翻译日语和韩语
+npm run translate -- ja ko
+```
+
+## 配置文件说明
+
+`scripts/translation.config.js`:
+
+```javascript
+export const translationConfig = {
+  // 源语言(你手动维护的语言)
+  sourceLang: 'en',
+  
+  // 目标语言列表
+  targetLangs: [
+    {
+      code: 'zh',           // 语言代码
+      name: 'Simplified Chinese (简体中文)',  // 完整名称(用于翻译提示)
+      file: 'zh.ts'         // 文件名
+    },
+    {
+      code: 'ja',
+      name: 'Japanese (日本語)',
+      file: 'ja.ts'
+    },
+    // 添加更多语言...
+  ]
+};
+```
+
+## 支持的语言
+
+DeepL 支持以下语言(脚本已配置):
+
+- 🇨🇳 Chinese (简体中文) - `zh`
+- 🇯🇵 Japanese (日本語) - `ja`
+- 🇰🇷 Korean (한국어) - `ko`
+- 🇪🇸 Spanish (Español) - `es`
+- 🇫🇷 French (Français) - `fr`
+- 🇩🇪 German (Deutsch) - `de`
+- 🇧🇷 Portuguese (Português) - `pt`
+- 🇷🇺 Russian (Русский) - `ru`
+- 🇮🇹 Italian (Italiano) - `it`
+- 🇳🇱 Dutch (Nederlands) - `nl`
+- 🇵🇱 Polish (Polski) - `pl`
+- 🇹🇷 Turkish (Türkçe) - `tr`
+- 🇸🇦 Arabic (العربية) - `ar`
+- 🇻🇳 Vietnamese (Tiếng Việt) - `vi`
+- 🇹🇭 Thai (ไทย) - `th`
+- 🇮🇩 Indonesian (Bahasa Indonesia) - `id`
 
 ## 注意事项
 
 - 🔑 **API Key 安全**: 不要将 `.env` 文件提交到 git
-- 💰 **API 费用**: Gemini API 有免费额度,正常使用不会产生费用
-- 🌐 **网络要求**: 需要能访问 Google API
-- ✏️ **人工修正**: 如果需要人工修正某些翻译,可以在翻译后手动编辑对应语言文件
+- 💰 **API 费用**: DeepL 免费版每月 500,000 字符,正常使用不会产生费用
+- 🌐 **网络要求**: 需要能访问 DeepL API
+- ✏️ **人工修正**: 如果需要人工修正某些翻译,可以使用 `// @manual` 标记保护
 - 📝 **增量更新**: 脚本只翻译新增或修改的内容,不会重新翻译已有的翻译
 
 ## 故障排查
 
-### 错误: GEMINI_API_KEY not found
-确保你已经创建 `.env` 文件并添加了 API key。
+### 错误: DEEPL_API_KEY not found
 
-### 错误: No valid target languages specified
-检查命令行参数是否正确,或者 `translation.config.js` 中是否配置了目标语言。
-
-### 翻译质量不佳
-Gemini 的翻译质量通常很好,但如果遇到特定术语翻译不准确,可以:
-1. 手动修改对应语言文件中的翻译
-2. 在 `en.ts` 中添加更多上下文
-
-### 网络错误
-检查网络连接,确保能访问 Google API。
-
-
-## 设置步骤
-
-### 1. 获取 Gemini API Key
-
-访问 [Google AI Studio](https://aistudio.google.com/app/apikey) 获取你的 API key。
-
-### 2. 配置环境变量
-
-在 `web` 目录下创建 `.env` 文件:
+确保你已经创建 `.env` 文件并添加了 API key:
 
 ```bash
+# 检查 .env 文件是否存在
+ls .env
+
+# 如果不存在,复制示例文件
 cp .env.example .env
+
+# 编辑 .env 文件,添加你的 API key
 ```
-
-然后编辑 `.env` 文件,添加你的 API key:
-
-```env
-GEMINI_API_KEY=your_actual_api_key_here
-```
-
-### 3. 运行翻译
-
-```bash
-npm run translate
-```
-
-## 工作流程
-
-1. **编辑英文翻译**: 只需修改 `src/i18n/en.ts` 文件
-2. **运行翻译命令**: `npm run translate`
-3. **自动更新中文**: 脚本会自动检测差异并更新 `src/i18n/zh.ts`
-
-## 功能特性
-
-✅ **智能差异检测**: 只翻译新增或修改的条目  
-✅ **保留格式**: 自动保留占位符如 `{count}`, `{gap}` 等  
-✅ **批量处理**: 每次处理 10 个条目,避免 API 限流  
-✅ **嵌套对象支持**: 正确处理多层嵌套的翻译对象  
-
-## 示例
-
-### 修改前 (en.ts)
-```typescript
-export const en = {
-  welcome: 'Welcome to NOFX',
-  greeting: 'Hello, {name}!',
-  // ... 其他翻译
-}
-```
-
-### 运行翻译
-```bash
-npm run translate
-```
-
-### 输出
-```
-🔍 Reading translation files...
-📊 Parsing translation objects...
-🔎 Finding differences...
-📝 Found 2 items to translate
-🌐 Translating batch 1/1...
-✅ Translation complete!
-📄 Updated 2 translations in zh.ts
-```
-
-### 修改后 (zh.ts)
-```typescript
-export const zh = {
-  welcome: '欢迎来到 NOFX',
-  greeting: '你好，{name}！',
-  // ... 其他翻译
-}
-```
-
-## 注意事项
-
-- 🔑 **API Key 安全**: 不要将 `.env` 文件提交到 git
-- 💰 **API 费用**: Gemini API 有免费额度,正常使用不会产生费用
-- 🌐 **网络要求**: 需要能访问 Google API
-- ✏️ **人工修正**: 如果需要人工修正某些翻译,可以在翻译后手动编辑 `zh.ts`
-
-## 故障排查
-
-### 错误: GEMINI_API_KEY not found
-确保你已经创建 `.env` 文件并添加了 API key。
 
 ### 翻译质量不佳
-Gemini 的翻译质量通常很好,但如果遇到特定术语翻译不准确,可以:
-1. 手动修改 `zh.ts` 中的翻译
+
+DeepL 的翻译质量通常很好,但如果遇到特定术语翻译不准确,可以:
+1. 使用 `// @manual` 标记,手动修改目标语言文件
 2. 在 `en.ts` 中添加更多上下文
 
+### 占位符被翻译了
+
+如果发现占位符被翻译,请检查:
+1. 占位符格式是否为 `{变量名}` (只支持字母和下划线)
+2. 运行最新版本的翻译脚本
+3. 如果问题仍然存在,请手动修正并使用 `// @manual` 标记保护
+
+### API 限流错误
+
+脚本已经内置了延迟机制,每批翻译之间会等待 500ms。如果仍然遇到限流:
+1. 检查你的 API 使用量是否超过限额
+2. 尝试减少批量大小(修改脚本中的 `batchSize`)
+
 ### 网络错误
-检查网络连接,确保能访问 Google API。
+
+检查网络连接,确保能访问 DeepL API:
+- 免费版: `https://api-free.deepl.com`
+- 专业版: `https://api.deepl.com`
