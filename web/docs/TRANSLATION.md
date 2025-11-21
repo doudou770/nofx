@@ -164,6 +164,61 @@ export const translationConfig = {
 };
 ```
 
+## 保护手动翻译
+
+如果某些翻译需要人工精确翻译,不希望被自动翻译覆盖,可以使用 `// @manual` 标记:
+
+### 使用方法
+
+在需要保护的翻译条目前添加 `// @manual` 注释:
+
+```typescript
+export const zh = {
+  // @manual
+  brandName: 'NOFX 交易系统',
+  
+  // @manual - 专业术语,人工精确翻译
+  technicalTerm: '技术术语(专业翻译)',
+  
+  // 普通翻译,会被自动更新
+  normalTerm: '普通术语',
+  
+  errors: {
+    // @manual
+    apiKeyInvalid: 'API 密钥格式错误',
+    networkError: '网络连接失败', // 会被自动更新
+  }
+}
+```
+
+### 工作原理
+
+1. 翻译脚本会扫描目标语言文件
+2. 识别所有 `// @manual` 标记
+3. 跳过标记的条目,不进行翻译
+4. 显示跳过的条目数量
+
+### 输出示例
+
+```
+🔒 Found 3 manually protected translations
+⏭️  Skipped 3 manually protected items
+📝 Found 10 items to translate
+```
+
+### 最佳实践
+
+✅ **适合标记的内容**:
+- 品牌名称和专有名词
+- 需要特定语境的专业术语
+- 已经过人工审核的重要翻译
+- 文化相关的表达
+
+❌ **不建议标记的内容**:
+- 通用的简单翻译
+- 经常变化的内容
+- 占位符和变量
+
 ## 注意事项
 
 - 🔑 **API Key 安全**: 不要将 `.env` 文件提交到 git

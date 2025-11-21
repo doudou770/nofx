@@ -37,6 +37,33 @@ if (targetLangs.length === 0) {
     process.exit(1);
 }
 
+// Parse manual markers from file content
+function parseManualMarkers(content) {
+    const manualKeys = new Set();
+    const lines = content.split('\n');
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        // Check if line contains @manual marker
+        if (line.includes('// @manual') || line.includes('//@manual')) {
+            // Next non-empty line should be the key
+            for (let j = i + 1; j < lines.length; j++) {
+                const nextLine = lines[j].trim();
+                if (nextLine && !nextLine.startsWith('//')) {
+                    // Extract key name from line like: keyName: 'value',
+                    const match = nextLine.match(/^(\w+):/);
+                    if (match) {
+                        manualKeys.add(match[1]);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    return manualKeys;
+}
+
 // Convert object string to actual object (simplified parser)
 function objectStringToObj(str) {
     try {
@@ -53,13 +80,23 @@ function objectStringToObj(str) {
 }
 
 // Deep diff two objects and return keys that are different or missing
-function getTranslationDiff(sourceObj, targetObj) {
+// Skip keys marked as @manual in the target file
+function getTranslationDiff(sourceObj, targetObj, manualKeys = new Set()) {
     const diff = {};
+    const skipped = [];
 
     function traverse(sourceNode, targetNode, path = []) {
         if (typeof sourceNode === 'string') {
+            const key = path.join('.');
+            const lastKey = path[path.length - 1];
+
+            // Skip if marked as manual
+            if (manualKeys.has(lastKey)) {
+                skipped.push(key);
+                return;
+            }
+
             if (sourceNode !== targetNode) {
-                const key = path.join('.');
                 diff[key] = sourceNode;
             }
             return;
@@ -77,7 +114,7 @@ function getTranslationDiff(sourceObj, targetObj) {
     }
 
     traverse(sourceObj, targetObj);
-    return diff;
+    return { diff, skipped };
 }
 
 // Translate a batch of strings using Gemini
@@ -136,21 +173,33 @@ async function updateLanguage(targetLang) {
         return false;
     }
 
-    console.log('� Reading translation files...');
+    console.log('🔍 Reading translation files...');
     const sourceContent = fs.readFileSync(sourcePath, 'utf8');
     const sourceObj = objectStringToObj(sourceContent);
 
     // Check if target file exists, if not create empty object
     let targetObj = {};
+    let manualKeys = new Set();
+    let targetContent = '';
+
     if (fs.existsSync(targetPath)) {
-        const targetContent = fs.readFileSync(targetPath, 'utf8');
+        targetContent = fs.readFileSync(targetPath, 'utf8');
         targetObj = objectStringToObj(targetContent);
+        manualKeys = parseManualMarkers(targetContent);
+
+        if (manualKeys.size > 0) {
+            console.log(`🔒 Found ${manualKeys.size} manually protected translations`);
+        }
     } else {
         console.log(`📝 Target file doesn't exist, will create: ${targetPath}`);
     }
 
     console.log('🔎 Finding differences...');
-    const diff = getTranslationDiff(sourceObj, targetObj);
+    const { diff, skipped } = getTranslationDiff(sourceObj, targetObj, manualKeys);
+
+    if (skipped.length > 0) {
+        console.log(`⏭️  Skipped ${skipped.length} manually protected items`);
+    }
 
     const diffKeys = Object.keys(diff);
     if (diffKeys.length === 0) {

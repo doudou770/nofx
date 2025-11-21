@@ -17,11 +17,11 @@ export const translationConfig = {
             file: 'zh.ts'
         },
         // Uncomment and add more languages as needed:
-        // {
-        //   code: 'ja',
-        //   name: 'Japanese (日本語)',
-        //   file: 'ja.ts'
-        // },
+        {
+            code: 'ja',
+            name: 'Japanese (日本語)',
+            file: 'ja.ts'
+        },
         // {
         //   code: 'ko',
         //   name: 'Korean (한국어)',
