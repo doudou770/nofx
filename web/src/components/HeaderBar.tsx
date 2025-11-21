@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Menu, X, ChevronDown, Globe } from 'lucide-react'
-import { t, type Language } from '../i18n/translations'
+import { t, type Language, SUPPORTED_LANGUAGES } from '../i18n/translations'
 import { Container } from './Container'
 import { useSystemConfig } from '../hooks/useSystemConfig'
 
@@ -508,60 +508,27 @@ export default function HeaderBar({
                     border: '1px solid var(--panel-border)',
                   }}
                 >
-                  <button
-                    onClick={() => {
-                      onLanguageChange?.('zh')
-                      setLanguageDropdownOpen(false)
-                    }}
-                    className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'zh' ? '' : 'hover:opacity-80'
-                      }`}
-                    style={{
-                      color: 'var(--brand-light-gray)',
-                      background:
-                        language === 'zh'
-                          ? 'rgba(240, 185, 11, 0.1)'
-                          : 'transparent',
-                    }}
-                  >
-                    <span className="text-base">🇨🇳</span>
-                    <span className="text-sm">中文</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      onLanguageChange?.('en')
-                      setLanguageDropdownOpen(false)
-                    }}
-                    className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'en' ? '' : 'hover:opacity-80'
-                      }`}
-                    style={{
-                      color: 'var(--brand-light-gray)',
-                      background:
-                        language === 'en'
-                          ? 'rgba(240, 185, 11, 0.1)'
-                          : 'transparent',
-                    }}
-                  >
-                    <span className="text-base">🇺🇸</span>
-                    <span className="text-sm">English</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      onLanguageChange?.('ja')
-                      setLanguageDropdownOpen(false)
-                    }}
-                    className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'ja' ? '' : 'hover:opacity-80'
-                      }`}
-                    style={{
-                      color: 'var(--brand-light-gray)',
-                      background:
-                        language === 'ja'
-                          ? 'rgba(240, 185, 11, 0.1)'
-                          : 'transparent',
-                    }}
-                  >
-                    <span className="text-base">ja</span>
-                    <span className="text-sm">ja</span>
-                  </button>
+                  {SUPPORTED_LANGUAGES.map((langOption) => (
+                    <button
+                      key={langOption.code}
+                      onClick={() => {
+                        onLanguageChange?.(langOption.code)
+                        setLanguageDropdownOpen(false)
+                      }}
+                      className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === langOption.code ? '' : 'hover:opacity-80'
+                        }`}
+                      style={{
+                        color: 'var(--brand-light-gray)',
+                        background:
+                          language === langOption.code
+                            ? 'rgba(240, 185, 11, 0.1)'
+                            : 'transparent',
+                      }}
+                    >
+                      <span className="text-base">{langOption.flag}</span>
+                      <span className="text-sm">{langOption.label}</span>
+                    </button>
+                  ))}
                 </div>
               )}
             </div>

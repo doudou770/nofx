@@ -10,6 +10,16 @@ export const translations = {
   ja,
 }
 
+export const SUPPORTED_LANGUAGES: {
+  code: Language
+  label: string
+  flag: string
+}[] = [
+    { code: 'zh', label: '中文', flag: '🇨🇳' },
+    { code: 'en', label: 'English', flag: '🇺🇸' },
+    { code: 'ja', label: '日本語', flag: '🇯🇵' }, // Keeping 'ja' as flag/label based on previous code, though flag usually is emoji
+  ]
+
 export function t(
   key: string,
   lang: Language,

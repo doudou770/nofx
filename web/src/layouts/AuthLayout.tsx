@@ -3,7 +3,7 @@ import { Outlet, Link } from 'react-router-dom'
 import { Globe } from 'lucide-react'
 import { Container } from '../components/Container'
 import { useLanguage } from '../contexts/LanguageContext'
-import { t, Language } from '../i18n/translations'
+import { t, Language, SUPPORTED_LANGUAGES } from '../i18n/translations'
 
 interface AuthLayoutProps {
   children?: ReactNode
@@ -78,60 +78,27 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                   border: '1px solid #2B3139',
                 }}
               >
-                <button
-                  onClick={() => {
-                    setLanguage('zh')
-                    setLanguageDropdownOpen(false)
-                  }}
-                  className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'zh' ? '' : 'hover:opacity-80'
-                    }`}
-                  style={{
-                    color: '#EAECEF',
-                    background:
-                      language === 'zh'
-                        ? 'rgba(240, 185, 11, 0.1)'
-                        : 'transparent',
-                  }}
-                >
-                  <span className="text-base">🇨🇳</span>
-                  <span className="text-sm">中文</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setLanguage('en')
-                    setLanguageDropdownOpen(false)
-                  }}
-                  className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'en' ? '' : 'hover:opacity-80'
-                    }`}
-                  style={{
-                    color: '#EAECEF',
-                    background:
-                      language === 'en'
-                        ? 'rgba(240, 185, 11, 0.1)'
-                        : 'transparent',
-                  }}
-                >
-                  <span className="text-base">🇺🇸</span>
-                  <span className="text-sm">English</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setLanguage('ja')
-                    setLanguageDropdownOpen(false)
-                  }}
-                  className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'ja' ? '' : 'hover:opacity-80'
-                    }`}
-                  style={{
-                    color: '#EAECEF',
-                    background:
-                      language === 'ja'
-                        ? 'rgba(240, 185, 11, 0.1)'
-                        : 'transparent',
-                  }}
-                >
-                  <span className="text-base">ja</span>
-                  <span className="text-sm">ja</span>
-                </button>
+                {SUPPORTED_LANGUAGES.map((langOption) => (
+                  <button
+                    key={langOption.code}
+                    onClick={() => {
+                      setLanguage(langOption.code)
+                      setLanguageDropdownOpen(false)
+                    }}
+                    className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === langOption.code ? '' : 'hover:opacity-80'
+                      }`}
+                    style={{
+                      color: '#EAECEF',
+                      background:
+                        language === langOption.code
+                          ? 'rgba(240, 185, 11, 0.1)'
+                          : 'transparent',
+                    }}
+                  >
+                    <span className="text-base">{langOption.flag}</span>
+                    <span className="text-sm">{langOption.label}</span>
+                  </button>
+                ))}
               </div>
             )}
           </div>
