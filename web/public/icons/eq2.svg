@@ -1,0 +1,15 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="luxury_gold_final" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FDC830"/>
+<stop offset="0.5" stop-color="#F37335"/>
+<stop offset="1" stop-color="#FDC830"/>
+</linearGradient>
+</defs>
+
+<path d="M95 25H30C24.4772 25 20 29.4772 20 35V85C20 90.5228 24.4772 95 30 95H95" stroke="url(#luxury_gold_final)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+
+<circle cx="60" cy="60" r="10" stroke="url(#luxury_gold_final)" stroke-width="8"/>
+<path d="M68 66L95 66" stroke="url(#luxury_gold_final)" stroke-width="8" stroke-linecap="round"/>
+
+</svg>

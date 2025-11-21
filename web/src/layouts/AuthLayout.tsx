@@ -26,7 +26,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             to="/"
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
-            <img src="/icons/nofx.svg" alt="NOFX Logo" className="w-8 h-8" />
+            <img src="/icons/eq.svg" alt="NOFX Logo" className="w-8 h-8" />
             <span className="text-xl font-bold" style={{ color: '#F0B90B' }}>
               NOFX
             </span>

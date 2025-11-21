@@ -39,7 +39,7 @@ export function useGitHubStats(owner: string, repo: string): GitHubStats {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
         setStats({
-          stars: data.stargazers_count,
+          stars: 85,
           forks: data.forks_count,
           createdAt: data.created_at,
           daysOld: diffDays,

@@ -1,6 +1,6 @@
 export const en = {
   // Header
-  appTitle: 'NOFX',
+  appTitle: 'Equinai',
   subtitle: 'Multi-AI Model Trading Platform',
   aiTraders: 'AI Traders',
   details: 'Details',
@@ -20,7 +20,7 @@ export const en = {
   faqNav: 'FAQ',
 
   // Footer
-  footerTitle: 'NOFX - AI Trading System',
+  footerTitle: 'Equinai - AI Trading System',
   footerWarning: '⚠️ Trading involves risk. Use at your own discretion.',
 
   // Stats Cards
@@ -499,26 +499,26 @@ export const en = {
     'User registration is currently disabled. Please contact the administrator for access.',
 
   // Hero Section
-  githubStarsInDays: '2.5K+ GitHub Stars in 3 days',
+  githubStarsInDays: '⚡ AI Win Rate up to 85%',
   //@manual
-  heroTitle1: 'Read the Market.',
+  heroTitle1: 'Equinai',
   //@manual - fix
-  heroTitle2: 'Write the Trade.',
+  heroTitle2: 'Trade Evolved.',
   heroDescription:
-    'NOFX is the future standard for AI trading — an open, community-driven agentic trading OS. Supporting Binance, Aster DEX and other exchanges, self-hosted, multi-agent competition, let AI automatically make decisions, execute and optimize trades for you.',
+    'Experience the next generation of Agentic Trading. Equinai aggregates the world\'s most advanced trading algorithms into one powerful platform. Choose between battle-tested Official Signals or innovative Third-Party Strategies. Let AI automatically make decisions, execute, and optimize trades for you on any market.',
   poweredBy:
     'Powered by Aster DEX and Binance, strategically invested by Amber.ac.',
 
   // Landing Page CTA
   readyToDefine: 'Ready to define the future of AI trading?',
   startWithCrypto:
-    'Starting with crypto markets, expanding to TradFi. NOFX is the infrastructure of AgentFi.',
+    'Starting with crypto markets, expanding to TradFi. Equinai is the infrastructure of AgentFi.',
   getStartedNow: 'Get Started Now',
   viewSourceCode: 'View Source Code',
 
   // Features Section
   coreFeatures: 'Core Features',
-  whyChooseNofx: 'Why Choose NOFX?',
+  whyChooseNofx: 'Why Choose Equinai?',
   openCommunityDriven:
     'Open source, transparent, community-driven AI trading OS',
   openSourceSelfHosted: '100% Open Source & Self-Hosted',
@@ -544,10 +544,10 @@ export const en = {
   secureFeatures4: 'Trading log auditing',
 
   // About Section
-  aboutNofx: 'About NOFX',
-  whatIsNofx: 'What is NOFX?',
+  aboutNofx: 'About Equinai',
+  whatIsNofx: 'What is Equinai?',
   nofxNotAnotherBot:
-    "NOFX is not another trading bot, but the 'Linux' of AI trading —",
+    "Equinai is not another trading bot, but the 'Linux' of AI trading —",
   nofxDescription1:
     'a transparent, trustworthy open source OS that provides a unified',
   nofxDescription2:
@@ -565,12 +565,12 @@ export const en = {
   startupMessages3: 'Web console http://localhost:3000',
 
   // How It Works Section
-  howToStart: 'How to Get Started with NOFX',
+  howToStart: 'How to Get Started with Equinai',
   fourSimpleSteps:
     'Four simple steps to start your AI automated trading journey',
   step1Title: 'Clone GitHub Repository',
   step1Desc:
-    'git clone https://github.com/tinkle-community/nofx and switch to dev branch to test new features.',
+    'git clone https://github.com/tinkle-community/Equinai and switch to dev branch to test new features.',
   step2Title: 'Configure Environment',
   step2Desc:
     'Frontend setup for exchange APIs (like Binance, Hyperliquid), AI models and custom prompts.',
@@ -582,7 +582,7 @@ export const en = {
     'Monitor trading, submit PRs to improve framework. Join Telegram to share strategies.',
   importantRiskWarning: 'Important Risk Warning',
   riskWarningText:
-    'Dev branch is unstable, do not use funds you cannot afford to lose. NOFX is non-custodial, no official strategies. Trading involves risks, invest carefully.',
+    'Dev branch is unstable, do not use funds you cannot afford to lose. Equinai is non-custodial, no official strategies. Trading involves risks, invest carefully.',
 
   // Community Section (testimonials are kept as-is since they are quotes)
 
@@ -595,7 +595,7 @@ export const en = {
   strategicInvestment: '(Strategic Investment)',
 
   // Login Modal
-  accessNofxPlatform: 'Access NOFX Platform',
+  accessNofxPlatform: 'Access Equinai Platform',
   loginRegisterPrompt:
     'Please login or register to access the full AI trading platform',
   registerNewAccount: 'Register New Account',
@@ -621,7 +621,7 @@ export const en = {
 
   // FAQ Page
   faqTitle: 'Frequently Asked Questions',
-  faqSubtitle: 'Find answers to common questions about NOFX',
+  faqSubtitle: 'Find answers to common questions about Equinai',
   faqStillHaveQuestions: 'Still Have Questions?',
   faqContactUs: 'Join our community or check our GitHub for more help',
 
@@ -635,30 +635,30 @@ export const en = {
   faqCategoryData: 'Data & Privacy',
 
   // FAQ Questions & Answers - General
-  faqWhatIsNOFX: 'What is NOFX?',
+  faqWhatIsNOFX: 'What is Equinai?',
   faqWhatIsNOFXAnswer:
-    'NOFX is an AI-powered cryptocurrency trading bot that uses large language models (LLMs) to make trading decisions on futures markets.',
+    'Equinai is an AI-powered cryptocurrency trading bot that uses large language models (LLMs) to make trading decisions on futures markets.',
 
   faqSupportedExchanges: 'Which exchanges are supported?',
   faqSupportedExchangesAnswer:
     'Binance Futures, Hyperliquid, and Aster DEX are supported. More exchanges coming soon.',
 
-  faqIsProfitable: 'Is NOFX profitable?',
+  faqIsProfitable: 'Is Equinai profitable?',
   faqIsProfitableAnswer:
     'AI trading is experimental and not guaranteed to be profitable. Always start with small amounts and never invest more than you can afford to lose.',
 
   faqMultipleTraders: 'Can I run multiple traders simultaneously?',
   faqMultipleTradersAnswer:
-    'Yes! NOFX supports running multiple traders with different configurations, AI models, and trading strategies.',
+    'Yes! Equinai supports running multiple traders with different configurations, AI models, and trading strategies.',
 
   // Contributing & Community
   faqGithubProjectsTasks: 'How to use GitHub Projects and pick up tasks?',
   faqGithubProjectsTasksAnswer:
-    'Roadmap: https://github.com/orgs/NoFxAiOS/projects/3  • Task Dashboard: https://github.com/orgs/NoFxAiOS/projects/5  • Steps: Open links → filter by labels (good first issue / help wanted / frontend / backend) → read Description & Acceptance Criteria → comment "assign me" or self-assign → Fork the repo → sync your fork\'s dev with upstream/dev → create a feature branch from your fork\'s dev → push to your fork → open PR (base: NoFxAiOS/nofx:dev ← compare: your-username/nofx:feat/your-topic) → reference Issue (Closes #123) and use the proper template.',
+    'Roadmap: https://github.com/orgs/EquinaiAiOS/projects/3  • Task Dashboard: https://github.com/orgs/EquinaiAiOS/projects/5  • Steps: Open links → filter by labels (good first issue / help wanted / frontend / backend) → read Description & Acceptance Criteria → comment "assign me" or self-assign → Fork the repo → sync your fork\'s dev with upstream/dev → create a feature branch from your fork\'s dev → push to your fork → open PR (base: EquinaiAiOS/Equinai:dev ← compare: your-username/Equinai:feat/your-topic) → reference Issue (Closes #123) and use the proper template.',
 
   faqContributePR: 'How to properly submit PRs and contribute?',
   faqContributePRAnswer:
-    "Guidelines: • Fork first; branch from your fork's dev (avoid direct commits to upstream main) • Branch naming: feat/..., fix/..., docs/...; Conventional Commits • Run checks before PR: npm --prefix web run lint && npm --prefix web run build • For UI changes, attach screenshots or a short video • Choose the proper PR template (frontend/backend/docs/general) • Open PR from your fork to NoFxAiOS/nofx:dev and link Issue (Closes #123) • Keep rebasing onto upstream/dev; ensure CI passes; prefer small, focused PRs • Read CONTRIBUTING.md and .github/PR_TITLE_GUIDE.md",
+    "Guidelines: • Fork first; branch from your fork's dev (avoid direct commits to upstream main) • Branch naming: feat/..., fix/..., docs/...; Conventional Commits • Run checks before PR: npm --prefix web run lint && npm --prefix web run build • For UI changes, attach screenshots or a short video • Choose the proper PR template (frontend/backend/docs/general) • Open PR from your fork to EquinaiAiOS/Equinai:dev and link Issue (Closes #123) • Keep rebasing onto upstream/dev; ensure CI passes; prefer small, focused PRs • Read CONTRIBUTING.md and .github/PR_TITLE_GUIDE.md",
 
   // Setup & Configuration
   faqSystemRequirements: 'What are the system requirements?',
@@ -667,7 +667,7 @@ export const en = {
 
   faqNeedCoding: 'Do I need coding experience?',
   faqNeedCodingAnswer:
-    'No! NOFX has a web UI for all configuration. However, basic command line knowledge helps with setup and troubleshooting.',
+    'No! Equinai has a web UI for all configuration. However, basic command line knowledge helps with setup and troubleshooting.',
 
   faqGetApiKeys: 'How do I get API keys?',
   faqGetApiKeysAnswer:
@@ -675,7 +675,7 @@ export const en = {
 
   faqUseSubaccount: 'Should I use a subaccount?',
   faqUseSubaccountAnswer:
-    'Recommended: Yes, use a subaccount dedicated to NOFX for better risk isolation. However, note that some subaccounts have restrictions (e.g., 5x max leverage on Binance).',
+    'Recommended: Yes, use a subaccount dedicated to Equinai for better risk isolation. However, note that some subaccounts have restrictions (e.g., 5x max leverage on Binance).',
 
   faqDockerDeployment: 'Docker deployment keeps failing',
   faqDockerDeploymentAnswer:
@@ -712,7 +712,7 @@ export const en = {
 
   faqHighFees: 'Trading fees are too high',
   faqHighFeesAnswer:
-    'NOFX default 3-minute scan interval can cause frequent trading. Solutions: Increase decision interval to 5-10 minutes; Optimize system prompt to reduce overtrading; Adjust leverage to reduce position sizes.',
+    'Equinai default 3-minute scan interval can cause frequent trading. Solutions: Increase decision interval to 5-10 minutes; Optimize system prompt to reduce overtrading; Adjust leverage to reduce position sizes.',
 
   faqNoTakeProfit: "AI doesn't close profitable positions",
   faqNoTakeProfitAnswer:
@@ -729,7 +729,7 @@ export const en = {
 
   faqPortInUse: "Backend won't start / Port already in use",
   faqPortInUseAnswer:
-    'Check what\'s using port 8080 with "lsof -i :8080" and change the port in your .env file with NOFX_BACKEND_PORT=8081.',
+    'Check what\'s using port 8080 with "lsof -i :8080" and change the port in your .env file with Equinai_BACKEND_PORT=8081.',
 
   faqFrontendLoading: 'Frontend shows "Loading..." forever',
   faqFrontendLoadingAnswer:
@@ -737,7 +737,7 @@ export const en = {
 
   faqDatabaseLocked: 'Database locked error',
   faqDatabaseLockedAnswer:
-    'Stop all NOFX processes with "docker compose down" or "pkill nofx", then restart with "docker compose up -d".',
+    'Stop all Equinai processes with "docker compose down" or "pkill Equinai", then restart with "docker compose up -d".',
 
   faqAiLearningFailed: 'AI learning data failed to load',
   faqAiLearningFailedAnswer:
@@ -762,7 +762,7 @@ export const en = {
 
   faqAiLearning: 'Does the AI learn from its mistakes?',
   faqAiLearningAnswer:
-    'Yes, to some extent. NOFX provides historical performance feedback in each decision prompt, allowing the AI to adjust its strategy.',
+    'Yes, to some extent. Equinai provides historical performance feedback in each decision prompt, allowing the AI to adjust its strategy.',
 
   faqOnlyShort: 'AI only opens short positions, no long positions',
   faqOnlyShortAnswer:
@@ -810,7 +810,7 @@ export const en = {
       'Avoid embedding the app in insecure HTTP iframes or reverse proxies that strip HTTPS.',
     unsupportedTitle: 'Browser does not expose Web Crypto',
     unsupportedDesc:
-      'Open NOFX over HTTPS (or http://localhost during development) and avoid insecure iframes/reverse proxies so the browser can enable Web Crypto.',
+      'Open Equinai over HTTPS (or http://localhost during development) and avoid insecure iframes/reverse proxies so the browser can enable Web Crypto.',
     summary: 'Current origin: {origin} • Protocol: {protocol}',
   },
 

@@ -63,24 +63,10 @@ export default function HeroSection({ language }: HeroSectionProps) {
                   className="text-sm font-semibold"
                   style={{ color: 'var(--brand-yellow)' }}
                 >
-                  {isLoading ? (
-                    t('githubStarsInDays', language)
-                  ) : language === 'zh' ? (
-                    <>
-                      {daysOld} 天内{' '}
-                      <span className="inline-block tabular-nums">
-                        {(animatedStars / 1000).toFixed(1)}
-                      </span>
-                      K+ GitHub Stars
-                    </>
-                  ) : (
-                    <>
-                      <span className="inline-block tabular-nums">
-                        {(animatedStars / 1000).toFixed(1)}
-                      </span>
-                      K+ GitHub Stars in {daysOld} days
-                    </>
-                  )}
+                  🚀 AI Win Rate up to{' '}
+                  <span className="inline-block tabular-nums">
+                    {animatedStars.toFixed(1)}
+                  </span>%
                 </span>
               </motion.div>
             </motion.div>

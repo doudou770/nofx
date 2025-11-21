@@ -68,18 +68,18 @@ export default function HeaderBar({
           to="/"
           className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
         >
-          <img src="/icons/nofx.svg" alt="NOFX Logo" className="w-8 h-8" />
+          <img src="/icons/eq.svg" alt="NOFX Logo" className="w-8 h-8" />
           <span
             className="text-xl font-bold"
             style={{ color: 'var(--brand-yellow)' }}
           >
-            NOFX
+            {t('appTitle', language)}
           </span>
           <span
             className="text-sm hidden sm:block"
             style={{ color: 'var(--text-secondary)' }}
           >
-            Agentic Trading OS
+            Agentic Trading
           </span>
         </Link>
 
@@ -829,8 +829,8 @@ export default function HeaderBar({
                   setMobileMenuOpen(false)
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded transition-colors ${language === 'zh'
-                    ? 'bg-yellow-500 text-black'
-                    : 'text-gray-400 hover:text-white'
+                  ? 'bg-yellow-500 text-black'
+                  : 'text-gray-400 hover:text-white'
                   }`}
               >
                 <span className="text-lg">🇨🇳</span>
@@ -842,8 +842,8 @@ export default function HeaderBar({
                   setMobileMenuOpen(false)
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded transition-colors ${language === 'en'
-                    ? 'bg-yellow-500 text-black'
-                    : 'text-gray-400 hover:text-white'
+                  ? 'bg-yellow-500 text-black'
+                  : 'text-gray-400 hover:text-white'
                   }`}
               >
                 <span className="text-lg">🇺🇸</span>

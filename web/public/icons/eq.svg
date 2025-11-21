@@ -1,0 +1,22 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="frame_grey_final" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+<stop stop-color="#434343"/>
+<stop offset="1" stop-color="#2c3e50"/>
+</linearGradient>
+<linearGradient id="diamond_gold_final" x1="66" y1="40" x2="66" y2="80" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFD700"/>
+<stop offset="1" stop-color="#FFA500"/>
+</linearGradient>
+<filter id="soft_glow_final" x="-50%" y="-50%" width="200%" height="200%">
+<feGaussianBlur stdDeviation="2" result="blur"/>
+<feComposite in="SourceGraphic" in2="blur" operator="over"/>
+</filter>
+</defs>
+
+<path d="M90 25H35C29.4772 25 25 29.4772 25 35V85C25 90.5228 29.4772 95 35 95H90" stroke="url(#frame_grey_final)" stroke-width="16" stroke-linecap="square" stroke-linejoin="bevel"/>
+
+<path d="M66 42L88 60L66 78L44 60L66 42Z" fill="url(#diamond_gold_final)" filter="url(#soft_glow_final)"/>
+<path d="M66 42L88 60L66 78L44 60L66 42Z" stroke="white" stroke-width="1" stroke-opacity="0.6"/>
+
+</svg>
