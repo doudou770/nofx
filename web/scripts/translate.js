@@ -60,23 +60,25 @@ if (targetLangs.length === 0) {
     process.exit(1);
 }
 
-// Parse manual markers from file content
+// Parse manual markers from file content and store with full comment text
 function parseManualMarkers(content) {
-    const manualKeys = new Set();
+    const manualKeys = new Map(); // key -> comment line
     const lines = content.split('\n');
 
     for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
+        const line = lines[i];
+        const trimmed = line.trim();
+
         // Check if line contains @manual marker
-        if (line.includes('// @manual') || line.includes('//@manual')) {
+        if (trimmed.includes('// @manual') || trimmed.includes('//@manual')) {
             // Next non-empty line should be the key
             for (let j = i + 1; j < lines.length; j++) {
                 const nextLine = lines[j].trim();
                 if (nextLine && !nextLine.startsWith('//')) {
-                    // Extract key name from line like: keyName: 'value',
-                    const match = nextLine.match(/^(\w+):/);
+                    // Extract key name from line like: "keyName": 'value',
+                    const match = nextLine.match(/^"?(\w+)"?:/);
                     if (match) {
-                        manualKeys.add(match[1]);
+                        manualKeys.set(match[1], line); // Store the full comment line with indentation
                     }
                     break;
                 }
@@ -105,7 +107,7 @@ async function loadTranslationObject(filePath) {
 
 // Deep diff two objects and return keys that are different or missing
 // Skip keys marked as @manual in the target file
-function getTranslationDiff(sourceObj, targetObj, manualKeys = new Set()) {
+function getTranslationDiff(sourceObj, targetObj, manualKeys = new Map()) {
     const diff = {};
     const skipped = [];
 
@@ -191,6 +193,40 @@ async function translateBatch(texts, targetLangCode) {
     }
 }
 
+// Convert object to formatted string with preserved @manual markers
+function objectToFormattedString(obj, manualKeys, indent = 2) {
+    const lines = [];
+    const spaces = ' '.repeat(indent);
+    const keys = Object.keys(obj);
+
+    lines.push('{');
+
+    keys.forEach((key, index) => {
+        const value = obj[key];
+        const isLast = index === keys.length - 1;
+
+        // Add @manual marker if it exists for this key
+        if (manualKeys.has(key)) {
+            const commentLine = manualKeys.get(key);
+            // Preserve the original indentation or use default
+            const trimmedComment = commentLine.trim();
+            lines.push(`${spaces}${trimmedComment}`);
+        }
+
+        // Format the key-value pair
+        if (typeof value === 'object' && value !== null) {
+            lines.push(`${spaces}"${key}": ${objectToFormattedString(value, manualKeys, indent + 2)}${isLast ? '' : ','}`);
+        } else {
+            const jsonValue = JSON.stringify(value);
+            lines.push(`${spaces}"${key}": ${jsonValue}${isLast ? '' : ','}`);
+        }
+    });
+
+    lines.push(' '.repeat(indent - 2) + '}');
+
+    return lines.join('\n');
+}
+
 // Update target language file with new translations
 async function updateLanguage(targetLang) {
     console.log(`\n${'='.repeat(60)}`);
@@ -210,7 +246,7 @@ async function updateLanguage(targetLang) {
 
     // Check if target file exists, if not create empty object
     let targetObj = {};
-    let manualKeys = new Set();
+    let manualKeys = new Map();
 
     if (fs.existsSync(targetPath)) {
         const targetContent = fs.readFileSync(targetPath, 'utf8');
@@ -280,8 +316,9 @@ async function updateLanguage(targetLang) {
         setNestedValue(targetObj, key, value);
     }
 
-    // Convert back to TypeScript file format
-    const newTargetContent = `export const ${targetLang.code} = ${JSON.stringify(targetObj, null, 2)}\n`;
+    // Convert back to TypeScript file format with preserved @manual markers
+    const formattedContent = objectToFormattedString(targetObj, manualKeys);
+    const newTargetContent = `export const ${targetLang.code} = ${formattedContent}\n`;
 
     // Write back to file
     fs.writeFileSync(targetPath, newTargetContent);
