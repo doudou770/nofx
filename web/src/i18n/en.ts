@@ -508,6 +508,10 @@ export const en = {
     'Experience the next generation of Agentic Trading. Equinai aggregates the world\'s most advanced trading algorithms into one powerful platform. Choose between battle-tested Official Signals or innovative Third-Party Strategies. Let AI automatically make decisions, execute, and optimize trades for you on any market.',
   poweredBy:
     'Powered by Aster DEX and Binance, strategically invested by Amber.ac.',
+  compatibleWith: 'Compatible with Binance, OKX, and Major Global Exchanges.',
+  activeAgents: 'ACTIVE AGENTS',
+  totalVolume: 'TOTAL VOLUME',
+  subscribers: 'SUBSCRIBERS',
 
   // Landing Page CTA
   readyToDefine: 'Ready to define the future of AI trading?',

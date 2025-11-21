@@ -1,8 +1,6 @@
-import { motion, useScroll, useTransform, useAnimation } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Sparkles } from 'lucide-react'
 import { t, Language } from '../../i18n/translations'
-import { useGitHubStats } from '../../hooks/useGitHubStats'
-import { useCounterAnimation } from '../../hooks/useCounterAnimation'
 
 interface HeroSectionProps {
   language: Language
@@ -12,15 +10,6 @@ export default function HeroSection({ language }: HeroSectionProps) {
   const { scrollYProgress } = useScroll()
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8])
-  const handControls = useAnimation()
-  const { stars, daysOld, isLoading } = useGitHubStats('NoFxAiOS', 'nofx')
-
-  // 动画数字 - 仅对 stars 添加动画
-  const animatedStars = useCounterAnimation({
-    start: 0,
-    end: stars,
-    duration: 2000,
-  })
 
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
@@ -65,7 +54,7 @@ export default function HeroSection({ language }: HeroSectionProps) {
                 >
                   🚀 AI Win Rate up to{' '}
                   <span className="inline-block tabular-nums">
-                    {animatedStars.toFixed(1)}
+                    85.0
                   </span>%
                 </span>
               </motion.div>
@@ -90,54 +79,29 @@ export default function HeroSection({ language }: HeroSectionProps) {
               {t('heroDescription', language)}
             </motion.p>
 
-            <div className="flex items-center gap-3 flex-wrap">
-              <motion.a
-                href="https://github.com/tinkle-community/nofx"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: 'spring', stiffness: 400 }}
-              >
-                <img
-                  src="https://img.shields.io/github/stars/tinkle-community/nofx?style=for-the-badge&logo=github&logoColor=white&color=F0B90B&labelColor=0A0A0A"
-                  alt="GitHub Stars"
-                  className="h-7"
-                />
-              </motion.a>
-              <motion.a
-                href="https://github.com/tinkle-community/nofx/network/members"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: 'spring', stiffness: 400 }}
-              >
-                <img
-                  src="https://img.shields.io/github/forks/tinkle-community/nofx?style=for-the-badge&logo=github&logoColor=white&color=F0B90B&labelColor=0A0A0A"
-                  alt="GitHub Forks"
-                  className="h-7"
-                />
-              </motion.a>
-              <motion.a
-                href="https://github.com/tinkle-community/nofx/graphs/contributors"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: 'spring', stiffness: 400 }}
-              >
-                <img
-                  src="https://img.shields.io/github/contributors/tinkle-community/nofx?style=for-the-badge&logo=github&logoColor=white&color=F0B90B&labelColor=0A0A0A"
-                  alt="GitHub Contributors"
-                  className="h-7"
-                />
-              </motion.a>
+            <div className="flex items-center gap-8 flex-wrap pt-4">
+              <div className="flex flex-col">
+                <span className="text-sm text-gray-400 font-medium mb-1">{t('activeAgents', language)}</span>
+                <span className="text-2xl font-bold text-white">50+</span>
+              </div>
+              <div className="w-px h-10 bg-gray-800 hidden sm:block"></div>
+              <div className="flex flex-col">
+                <span className="text-sm text-gray-400 font-medium mb-1">{t('totalVolume', language)}</span>
+                <span className="text-2xl font-bold text-white">$120M+</span>
+              </div>
+              <div className="w-px h-10 bg-gray-800 hidden sm:block"></div>
+              <div className="flex flex-col">
+                <span className="text-sm text-gray-400 font-medium mb-1">{t('subscribers', language)}</span>
+                <span className="text-2xl font-bold text-white">2.5K</span>
+              </div>
             </div>
 
             <motion.p
-              className="text-xs pt-4"
+              className="text-xs pt-8"
               style={{ color: 'var(--text-tertiary)' }}
               variants={fadeInUp}
             >
-              {t('poweredBy', language)}
+              {t('compatibleWith', language)}
             </motion.p>
           </motion.div>
 
