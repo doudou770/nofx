@@ -1,5 +1,6 @@
 export const en = {
   // Header
+  // @manual
   appTitle: 'Equinai',
   subtitle: 'Multi-AI Model Trading Platform',
   aiTraders: 'AI Traders',
@@ -20,6 +21,7 @@ export const en = {
   faqNav: 'FAQ',
 
   // Footer
+  // @manual
   footerTitle: 'Equinai - AI Trading System',
   footerWarning: '⚠️ Trading involves risk. Use at your own discretion.',
 
@@ -57,9 +59,9 @@ export const en = {
   success: 'Success',
   failed: 'Failed',
   inputPrompt: 'Input Prompt',
-  aiThinking: 'AI Chain of Thought',
-  collapse: 'Collapse',
-  expand: 'Expand',
+  aiThinking: '💭 AI Chain of Thought',
+  collapse: '▼ Collapse',
+  expand: '▶ Expand',
 
   // Equity Chart
   accountEquityCurve: 'Account Equity Curve',
@@ -102,7 +104,7 @@ export const en = {
   aiLearning: 'AI Learning & Reflection',
   tradesAnalyzed: '{count} trades analyzed · Real-time evolution',
   latestReflection: 'Latest Reflection',
-  fullCoT: 'Full Chain of Thought',
+  fullCoT: '📋 Full Chain of Thought',
   totalTrades: 'Total Trades',
   winRate: 'Win Rate',
   avgWin: 'Avg Win',
@@ -115,7 +117,7 @@ export const en = {
   poor: '❌ Poor - Losses exceed gains',
   bestPerformer: 'Best Performer',
   worstPerformer: 'Worst Performer',
-  symbolPerformance: 'Symbol Performance',
+  symbolPerformance: '📊 Symbol Performance',
   tradeHistory: 'Trade History',
   completedTrades: 'Recent {count} completed trades',
   noCompletedTrades: 'No completed trades yet',
@@ -126,7 +128,7 @@ export const en = {
   latest: 'Latest',
 
   // AI Learning Description
-  howAILearns: 'How AI Learns & Evolves',
+  howAILearns: '💡 How AI Learns & Evolves',
   aiLearningPoint1: 'Analyzes last 20 trading cycles before each decision',
   aiLearningPoint2: 'Identifies best & worst performing symbols',
   aiLearningPoint3: 'Optimizes position sizing based on win rate',
