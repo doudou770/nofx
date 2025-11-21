@@ -383,8 +383,8 @@ export default function HeaderBar({
                       border: '1px solid var(--panel-border)',
                     }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        'rgba(255, 255, 255, 0.05)')
+                    (e.currentTarget.style.background =
+                      'rgba(255, 255, 255, 0.05)')
                     }
                     onMouseLeave={(e) =>
                       (e.currentTarget.style.background = 'var(--panel-bg)')
@@ -490,8 +490,8 @@ export default function HeaderBar({
                 className="flex items-center gap-2 px-3 py-2 rounded transition-colors"
                 style={{ color: 'var(--brand-light-gray)' }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.background =
-                    'rgba(255, 255, 255, 0.05)')
+                (e.currentTarget.style.background =
+                  'rgba(255, 255, 255, 0.05)')
                 }
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.background = 'transparent')
@@ -516,9 +516,8 @@ export default function HeaderBar({
                       onLanguageChange?.('zh')
                       setLanguageDropdownOpen(false)
                     }}
-                    className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${
-                      language === 'zh' ? '' : 'hover:opacity-80'
-                    }`}
+                    className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'zh' ? '' : 'hover:opacity-80'
+                      }`}
                     style={{
                       color: 'var(--brand-light-gray)',
                       background:
@@ -535,9 +534,8 @@ export default function HeaderBar({
                       onLanguageChange?.('en')
                       setLanguageDropdownOpen(false)
                     }}
-                    className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${
-                      language === 'en' ? '' : 'hover:opacity-80'
-                    }`}
+                    className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'en' ? '' : 'hover:opacity-80'
+                      }`}
                     style={{
                       color: 'var(--brand-light-gray)',
                       background:
@@ -548,6 +546,24 @@ export default function HeaderBar({
                   >
                     <span className="text-base">🇺🇸</span>
                     <span className="text-sm">English</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      onLanguageChange?.('ja')
+                      setLanguageDropdownOpen(false)
+                    }}
+                    className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'ja' ? '' : 'hover:opacity-80'
+                      }`}
+                    style={{
+                      color: 'var(--brand-light-gray)',
+                      background:
+                        language === 'ja'
+                          ? 'rgba(240, 185, 11, 0.1)'
+                          : 'transparent',
+                    }}
+                  >
+                    <span className="text-base">ja</span>
+                    <span className="text-sm">ja</span>
                   </button>
                 </div>
               )}
@@ -812,11 +828,10 @@ export default function HeaderBar({
                   onLanguageChange?.('zh')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded transition-colors ${
-                  language === 'zh'
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded transition-colors ${language === 'zh'
                     ? 'bg-yellow-500 text-black'
                     : 'text-gray-400 hover:text-white'
-                }`}
+                  }`}
               >
                 <span className="text-lg">🇨🇳</span>
                 <span className="text-sm">中文</span>
@@ -826,11 +841,10 @@ export default function HeaderBar({
                   onLanguageChange?.('en')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded transition-colors ${
-                  language === 'en'
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded transition-colors ${language === 'en'
                     ? 'bg-yellow-500 text-black'
                     : 'text-gray-400 hover:text-white'
-                }`}
+                  }`}
               >
                 <span className="text-lg">🇺🇸</span>
                 <span className="text-sm">English</span>

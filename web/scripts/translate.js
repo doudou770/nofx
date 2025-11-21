@@ -23,7 +23,10 @@ if (!process.env.GEMINI_API_KEY) {
 }
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+//https://aistudio.google.com/usage?project=gen-lang-client-0775270064&timeRange=last-28-days&tab=rate-limit
+//gemini-2.0-flash-live
+//models/gemini-2.5-flash
+const model = genAI.getGenerativeModel({ model: 'models/gemini-2.5-flash' });
 
 // Get target languages from command line args or use all configured languages
 const args = process.argv.slice(2);
@@ -64,17 +67,18 @@ function parseManualMarkers(content) {
     return manualKeys;
 }
 
-// Convert object string to actual object (simplified parser)
-function objectStringToObj(str) {
+// Load translation object from file using dynamic import
+async function loadTranslationObject(filePath) {
     try {
-        const cleaned = str
-            .replace(/export const \w+ = /, '')
-            .replace(/\/\/.*/g, '') // Remove comments
-            .replace(/\/\*[\s\S]*?\*\//g, ''); // Remove block comments
+        // Use dynamic import to load the module
+        const fileUrl = `file:///${filePath.replace(/\\/g, '/')}`;
+        const module = await import(fileUrl + '?t=' + Date.now()); // Add timestamp to avoid cache
 
-        return new Function('return ' + cleaned)();
+        // Get the exported object (e.g., en, zh, ja)
+        const fileName = path.basename(filePath, '.ts');
+        return module[fileName];
     } catch (error) {
-        console.error('Error parsing object:', error);
+        console.error('Error loading translation object:', error);
         throw error;
     }
 }
@@ -174,17 +178,15 @@ async function updateLanguage(targetLang) {
     }
 
     console.log('🔍 Reading translation files...');
-    const sourceContent = fs.readFileSync(sourcePath, 'utf8');
-    const sourceObj = objectStringToObj(sourceContent);
+    const sourceObj = await loadTranslationObject(sourcePath);
 
     // Check if target file exists, if not create empty object
     let targetObj = {};
     let manualKeys = new Set();
-    let targetContent = '';
 
     if (fs.existsSync(targetPath)) {
-        targetContent = fs.readFileSync(targetPath, 'utf8');
-        targetObj = objectStringToObj(targetContent);
+        const targetContent = fs.readFileSync(targetPath, 'utf8');
+        targetObj = await loadTranslationObject(targetPath);
         manualKeys = parseManualMarkers(targetContent);
 
         if (manualKeys.size > 0) {

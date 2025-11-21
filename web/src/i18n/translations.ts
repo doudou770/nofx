@@ -1,11 +1,13 @@
 import { en } from './en'
 import { zh } from './zh'
+import { ja } from './ja'
 
-export type Language = 'en' | 'zh'
+export type Language = 'en' | 'zh' | 'ja'
 
 export const translations = {
   en,
   zh,
+  ja,
 }
 
 export function t(
