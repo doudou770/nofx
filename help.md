@@ -1,86 +1,111 @@
-# NOFX 深度代码分析报告
+# NOFX 后端深度代码解析报告
 
-## 1. 项目概述
+## 1. 架构总览
 
-NOFX 是一个基于 **Go (后端)** 和 **React (前端)** 的通用代理式交易操作系统（Agentic Trading OS）。它旨在通过 AI 模型（如 DeepSeek、Qwen）实现全自动的加密货币合约交易。系统采用了模块化设计，支持多交易所（Binance, Hyperliquid, Aster），并具备完善的风险控制和决策记录机制。
+NOFX 后端是一个基于 **Go** 语言构建的高性能、模块化量化交易系统。它采用了典型的分层架构，核心设计理念是**模块解耦**、**数据驱动**和**AI 决策**。
 
-## 2. 核心架构
+### 核心组件交互图
 
-项目采用经典的前后端分离架构：
+```mermaid
+graph TD
+    Main[main.go Entry] --> Config[Config & DB Layer]
+    Main --> Manager[Trader Manager]
+    Main --> API[API Server (Gin)]
+    Main --> Market[Market Monitor (WS)]
+    
+    API --> Manager
+    API --> Config
+    
+    Manager --> AutoTrader[AutoTrader Instances]
+    
+    AutoTrader --> Decision[Decision Engine (AI)]
+    AutoTrader --> TraderInterface[Trader Interface]
+    AutoTrader --> Market
+    
+    TraderInterface --> Binance[Binance Futures]
+    TraderInterface --> Hyperliquid[Hyperliquid DEX]
+    TraderInterface --> Aster[Aster DEX]
+    
+    Decision --> LLM[LLM Client (DeepSeek/Qwen)]
+```
 
-*   **后端 (Backend)**: 使用 Go 语言编写，核心框架为 Gin。负责市场数据采集、AI 决策调度、交易执行、状态管理和 API 服务。
-*   **前端 (Frontend)**: 使用 React 18 + TypeScript + Vite + TailwindCSS 构建。提供可视化的仪表盘、配置管理和实时监控界面。
-*   **数据存储 (Database)**: 使用 SQLite (`config.db`) 存储配置、交易员状态、内测码等轻量级数据。
-*   **AI 集成 (AI Integration)**: 通过自定义的 MCP (Model Client Protocol) 模块与大语言模型交互，支持流式对话和结构化输出。
+## 2. 核心模块深度解析
 
-## 3. 关键模块深度解析
+### 2.1 入口与生命周期 (`main.go`)
+*   **初始化流程**:
+    1.  加载 `.env` 和 `config.json`。
+    2.  初始化 SQLite 数据库 (`config.db`)，并启用 **WAL 模式** (Write-Ahead Logging) 和 **FULL 同步**，确保高并发下的性能和数据安全性。
+    3.  初始化 RSA 加密服务，用于保护 API Key 等敏感数据。
+    4.  启动 `TraderManager` 并从数据库加载所有交易员实例。
+    5.  启动 `WSMonitor` (WebSocket 市场数据监控)。
+    6.  启动 HTTP API 服务器。
+*   **优雅退出**: 监听 `SIGINT`/`SIGTERM` 信号，依次停止交易员、关闭 API 服务器、关闭数据库连接，防止数据丢失。
 
-### 3.1 自动交易引擎 (`trader/auto_trader.go`)
+### 2.2 配置与持久化 (`config/`)
+*   **数据库设计**: 使用 SQLite 存储所有状态。
+    *   `users`: 用户管理，支持 OTP 双因素认证。
+    *   `traders`: 交易员配置，包含杠杆、策略 Prompt、运行状态等。
+    *   `exchanges`: 交易所 API 配置，支持多用户隔离。
+    *   `ai_models`: AI 模型配置，支持自定义 API URL。
+*   **安全性**:
+    *   **字段加密**: API Key、Secret Key、私钥等敏感字段在存入数据库前均通过 RSA 加密。
+    *   **WAL 模式**: 显式开启 `PRAGMA journal_mode=WAL`，大幅提升写入性能。
 
-这是系统的核心调度器，每个 `AutoTrader` 实例代表一个独立的 AI 交易员。
+### 2.3 交易员管理 (`manager/`)
+*   **并发控制**: `TraderManager` 使用 `sync.RWMutex` 保护内存中的 `traders` 映射，支持并发读写。
+*   **动态加载**: 支持在运行时动态添加、更新、停止交易员，无需重启服务。
+*   **性能优化**:
+    *   **竞赛数据缓存**: `GetCompetitionData` 实现了 30 秒的内存缓存，避免频繁计算 PnL 导致 CPU 飙升。
+    *   **并发查询**: `getConcurrentTraderData` 使用 Goroutine 并发获取多个交易员的账户状态，并设置了 3 秒超时，防止单个交易所 API 阻塞整体响应。
 
-*   **运行机制**: 采用轮询机制 (`Run` 方法)，默认每 3 分钟 (`ScanInterval`) 执行一次 `runCycle`。
-*   **上下文构建**: 在每次决策前，通过 `buildTradingContext` 收集全方位的市场和账户信息：
-    *   **账户状态**: 净值、余额、未实现盈亏、保证金使用率。
-    *   **持仓信息**: 当前持仓的盈亏、杠杆、持仓时长、历史最高收益率 (`PeakPnLPct`)。
-    *   **市场数据**: 候选币种的 3分钟/4小时 K线数据、技术指标 (MACD, RSI)。
-    *   **历史表现**: 最近 100 个周期的夏普比率分析，用于 AI 自我修正。
-*   **执行逻辑**: 获取 AI 决策后，通过 `executeDecisionWithRecord` 执行操作。系统强制执行"先平仓后开仓"的顺序，并包含严格的风险检查（如防止同方向重复开仓、保证金不足检查）。
+### 2.4 自动交易核心 (`trader/auto_trader.go`)
+这是系统的"大脑"，每个实例是一个独立的交易循环。
+*   **状态机**: `runCycle` 方法周期性执行（默认 3 分钟）：
+    1.  **Context 构建**: 聚合账户余额、持仓、K线数据、技术指标。
+    2.  **AI 决策**: 调用 `decision` 包获取 AI 建议。
+    3.  **执行**: 解析 AI 指令，执行开/平仓操作。
+    4.  **风控**: 检查最大回撤、每日亏损限额。
+*   **自我修正**: 维护最近 100 次周期的夏普比率，如果表现不佳（Sharpe < -0.5），会自动暂停交易。
 
-### 3.2 决策引擎 (`decision/engine.go`)
+### 2.5 交易所适配层 (`trader/`)
+通过 `Trader` 接口屏蔽了 CEX 和 DEX 的差异。
 
-负责将交易上下文转化为 AI 可理解的 Prompt，并解析 AI 的输出。
+#### A. Binance Futures (`binance_futures.go`)
+*   **库**: 使用 `github.com/adshao/go-binance/v2`。
+*   **特性**:
+    *   **双向持仓**: 初始化时强制设置为 Hedge Mode。
+    *   **缓存**: 实现了 15 秒的余额和持仓缓存，减少 API 频率限制风险。
+    *   **BrID**: 生成唯一的 Client Order ID，防止订单重复提交。
 
-*   **Prompt 工程**:
-    *   **System Prompt**: 定义了 AI 的角色（专业交易员）、目标（最大化夏普比率）、核心原则（资金保全第一）和输出格式（XML + JSON）。
-    *   **User Prompt**: 动态注入当前的市场数据、账户状态和持仓详情。
-    *   **模板化**: 支持加载不同的 Prompt 模板 (`prompts/default.txt`)，允许用户自定义策略。
-*   **鲁棒性设计**:
-    *   **格式清洗**: 专门处理 LLM 常见的格式错误，如全角符号修正 (`fixMissingQuotes`)、Markdown 代码块提取。
-    *   **结构化输出**: 强制 AI 使用 `<reasoning>` (思维链) 和 `<decision>` (JSON 数组) 标签，确保决策的可解析性。
-    *   **安全回退**: 如果 AI 未输出有效 JSON，系统会进入安全等待模式 (`wait`)，防止程序崩溃或错误交易。
+#### B. Hyperliquid (`hyperliquid_trader.go`)
+*   **库**: 使用自定义封装的 `github.com/sonirico/go-hyperliquid`。
+*   **安全机制**:
+    *   **Agent Wallet**: 强制区分"主钱包"和"代理钱包"。私钥仅用于签名（Agent），资金保留在主钱包，极大降低了私钥泄露风险。
+    *   **精度处理**: 实现了 `szDecimals` (数量精度) 和 `sigfigs` (价格有效位) 的严格处理，防止因精度问题导致下单失败。
+*   **模式**: 支持全仓 (Cross) 和逐仓 (Isolated) 模式切换。
 
-### 3.3 市场数据监控 (`market/monitor.go`)
+#### C. Aster DEX (`aster_trader.go`)
+*   **实现**: 原生 HTTP 请求 + 以太坊签名。
+*   **签名机制**: 使用 EIP-712 风格或 Personal Sign 对请求参数进行签名。
+*   **精度缓存**: 启动时拉取 `exchangeInfo` 并缓存所有交易对的 `tickSize` 和 `stepSize`，确保下单参数符合合约要求。
 
-负责实时维护市场数据，为 AI 提供决策依据。
+### 2.6 决策引擎 (`decision/`)
+*   **Prompt 工程**: 采用 XML 结构化 Prompt (`<context>`, `<market_data>`)，强制 AI 输出 JSON 格式决策。
+*   **鲁棒性**:
+    *   **JSON 修复**: 内置 `fixMissingQuotes` 等函数，能自动修复 LLM 输出的畸形 JSON。
+    *   **思维链**: 强制 AI 输出 `<reasoning>` 标签，记录决策逻辑，便于后续复盘。
 
-*   **WebSocket 架构**: 使用 `CombinedStreamsClient` 批量订阅 Binance 的 WebSocket 流。
-*   **数据同步**:
-    *   **初始化**: 启动时先通过 REST API 拉取历史 K 线，填充缓存。
-    *   **实时更新**: 监听 `kline_3m` 和 `kline_4h` 推送，实时更新内存中的 K 线数据。
-    *   **动态订阅**: 支持在运行时动态添加新的监控币种。
-*   **并发安全**: 大量使用 `sync.Map` 存储 K 线数据 (`klineDataMap3m`, `klineDataMap4h`)，确保高并发下的读写安全。
+### 2.7 API 服务 (`api/`)
+*   **框架**: Gin Web Framework。
+*   **功能**:
+    *   **JWT 认证**: 基于 `Authorization` 头进行鉴权。
+    *   **IP 白名单**: 提供 `handleGetServerIP` 接口辅助用户配置交易所白名单。
+    *   **WebSocket**: 虽然主要用于 HTTP，但也集成了 WS 用于前端实时推送（在 `market` 模块中）。
 
-### 3.4 多模型客户端 (`mcp/`)
+## 3. 总结与评价
 
-虽然命名为 MCP，但实际上是一个轻量级的 AI 客户端抽象层。
-
-*   **接口抽象**: `AIClient` 接口定义了 `CallWithMessages` 等标准方法，屏蔽了不同模型厂商的 API 差异。
-*   **实现**: 内置了 `DeepSeekClient` 和 `QwenClient`，支持自定义 API URL 和模型名称，方便接入 OpenAI 兼容的其他模型。
-
-## 4. AI 交易逻辑与策略
-
-通过分析 `prompts/default.txt`，我们可以看到系统预设的交易人格：
-
-*   **核心指标**: **夏普比率 (Sharpe Ratio)**。AI 被明确告知，夏普比率是唯一的绩效指标，这会自然惩罚频繁交易和高波动策略。
-*   **交易风格**: **低频、高质量**。建议每天仅交易 2-4 笔，持仓时间建议 >30 分钟。
-*   **风控原则**:
-    *   风险回报比必须 ≥ 1:3。
-    *   夏普比率 < -0.5 时强制停止交易并反思。
-    *   严格限制持仓数量（最多 3 个）和单币仓位。
-*   **思维链 (CoT)**: 强制 AI 在输出决策前先进行 `<reasoning>`，分析市场趋势、技术指标和资金流向，这有助于提升决策的逻辑性和稳定性。
-
-## 5. 代码质量与扩展性评价
-
-*   **优点**:
-    *   **结构清晰**: 模块职责划分明确 (Trader, Market, Decision, API)，易于维护。
-    *   **扩展性强**: `Trader` 接口设计使得接入新交易所（如 OKX, Bybit）非常容易；`AIClient` 接口也方便接入 Claude 或 GPT-4。
-    *   **健壮性**: 在 JSON 解析、网络请求和交易执行环节都有完善的错误处理和日志记录。
-    *   **配置化**: 大量参数（杠杆、币种、API Key）均可配置，且支持数据库持久化。
-*   **潜在改进点**:
-    *   **前端集成**: 目前前端代码与后端在同一仓库，但构建流程相对独立，可以考虑更紧密的集成。
-    *   **测试覆盖**: 核心逻辑有单元测试 (`*_test.go`)，但集成测试覆盖率可以进一步提高，特别是针对 AI 决策边界情况的测试。
-
-## 6. 总结
-
-NOFX 是一个完成度很高的 AI 交易系统。它不仅仅是一个简单的 API 包装器，而是深入考虑了 AI 在金融交易中的实际落地问题——如何控制幻觉（通过严格的 JSON 校验）、如何保证策略一致性（通过夏普比率反馈环）、以及如何管理风险（硬编码的风控规则）。其架构设计合理，具备良好的扩展潜力，适合作为量化交易或 AI Agent 开发的参考范例。
+NOFX 后端代码展现了极高的工程质量：
+1.  **安全性**: 极其重视资金安全，从 Agent Wallet 设计到 RSA 加密，再到硬编码的风控规则，层层防护。
+2.  **扩展性**: `Trader` 接口设计优秀，新增交易所只需实现该接口即可。
+3.  **稳定性**: 大量使用 Context 超时控制、错误重试机制和 Panic 恢复（在 Gin 中），确保系统长期稳定运行。
+4.  **AI 原生**: 不是简单的"策略脚本"，而是围绕 LLM 构建的自主决策系统，充分利用了 AI 的分析能力。
