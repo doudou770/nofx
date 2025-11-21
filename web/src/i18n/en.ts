@@ -516,11 +516,11 @@ export const en = {
   subscribers: 'SUBSCRIBERS',
 
   // Landing Page CTA
-  readyToDefine: 'Ready to define the future of AI trading?',
+  readyToDefine: 'Ready to Automate Your Wealth?',
   startWithCrypto:
-    'Starting with crypto markets, expanding to TradFi. Equinai is the infrastructure of AgentFi.',
+    'Join the premier AI signal marketplace. Connect your exchange, subscribe to winning strategies, and let the algorithms do the work.',
   getStartedNow: 'Get Started Now',
-  viewSourceCode: 'View Source Code',
+  viewSourceCode: 'Browse Marketplace',
 
   // Features Section
   coreFeatures: 'Core Features',
@@ -593,7 +593,7 @@ export const en = {
   // Community Section (testimonials are kept as-is since they are quotes)
 
   // Footer Section
-  futureStandardAI: 'The future standard of AI trading',
+  futureStandardAI: 'The Intelligent Signal Marketplace.',
   links: 'Links',
   resources: 'Resources',
   documentation: 'Documentation',
