@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown, Globe } from 'lucide-react'
 import { t, type Language } from '../i18n/translations'
 import { Container } from './Container'
 import { useSystemConfig } from '../hooks/useSystemConfig'
@@ -487,7 +487,7 @@ export default function HeaderBar({
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded transition-colors"
+                className="flex items-center gap-2 px-3 py-2 rounded transition-colors hover:text-white"
                 style={{ color: 'var(--brand-light-gray)' }}
                 onMouseEnter={(e) =>
                 (e.currentTarget.style.background =
@@ -497,10 +497,7 @@ export default function HeaderBar({
                   (e.currentTarget.style.background = 'transparent')
                 }
               >
-                <span className="text-lg">
-                  {language === 'zh' ? '🇨🇳' : '🇺🇸'}
-                </span>
-                <ChevronDown className="w-4 h-4" />
+                <Globe className="w-5 h-5" />
               </button>
 
               {languageDropdownOpen && (

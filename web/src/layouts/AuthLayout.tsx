@@ -1,5 +1,6 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState, useEffect, useRef } from 'react'
 import { Outlet, Link } from 'react-router-dom'
+import { Globe } from 'lucide-react'
 import { Container } from '../components/Container'
 import { useLanguage } from '../contexts/LanguageContext'
 import { t, Language } from '../i18n/translations'
@@ -10,6 +11,25 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   const { language, setLanguage } = useLanguage()
+  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setLanguageDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <div className="min-h-screen" style={{ background: '#0B0E11' }}>
@@ -34,18 +54,86 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           </Link>
 
           {/* Language Selector */}
-          <div className="flex items-center gap-2">
+          <div className="relative" ref={dropdownRef}>
             <button
-              onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}
-              className="px-3 py-1.5 rounded text-sm font-medium transition-colors"
-              style={{
-                background: '#1E2329',
-                border: '1px solid #2B3139',
-                color: '#EAECEF',
-              }}
+              onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
+              className="flex items-center gap-2 px-3 py-2 rounded transition-colors hover:text-white"
+              style={{ color: '#EAECEF' }}
+              onMouseEnter={(e) =>
+              (e.currentTarget.style.background =
+                'rgba(255, 255, 255, 0.05)')
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = 'transparent')
+              }
             >
-              {language === 'zh' ? 'English' : '中文'}
+              <Globe className="w-5 h-5" />
             </button>
+
+            {languageDropdownOpen && (
+              <div
+                className="absolute right-0 top-full mt-2 w-32 rounded-lg shadow-lg overflow-hidden z-50"
+                style={{
+                  background: '#1E2329',
+                  border: '1px solid #2B3139',
+                }}
+              >
+                <button
+                  onClick={() => {
+                    setLanguage('zh')
+                    setLanguageDropdownOpen(false)
+                  }}
+                  className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'zh' ? '' : 'hover:opacity-80'
+                    }`}
+                  style={{
+                    color: '#EAECEF',
+                    background:
+                      language === 'zh'
+                        ? 'rgba(240, 185, 11, 0.1)'
+                        : 'transparent',
+                  }}
+                >
+                  <span className="text-base">🇨🇳</span>
+                  <span className="text-sm">中文</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setLanguage('en')
+                    setLanguageDropdownOpen(false)
+                  }}
+                  className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'en' ? '' : 'hover:opacity-80'
+                    }`}
+                  style={{
+                    color: '#EAECEF',
+                    background:
+                      language === 'en'
+                        ? 'rgba(240, 185, 11, 0.1)'
+                        : 'transparent',
+                  }}
+                >
+                  <span className="text-base">🇺🇸</span>
+                  <span className="text-sm">English</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setLanguage('ja')
+                    setLanguageDropdownOpen(false)
+                  }}
+                  className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'ja' ? '' : 'hover:opacity-80'
+                    }`}
+                  style={{
+                    color: '#EAECEF',
+                    background:
+                      language === 'ja'
+                        ? 'rgba(240, 185, 11, 0.1)'
+                        : 'transparent',
+                  }}
+                >
+                  <span className="text-base">ja</span>
+                  <span className="text-sm">ja</span>
+                </button>
+              </div>
+            )}
           </div>
         </Container>
       </nav>

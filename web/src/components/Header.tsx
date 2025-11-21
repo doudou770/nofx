@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef } from 'react'
+import { Globe } from 'lucide-react'
 import { useLanguage } from '../contexts/LanguageContext'
 import { t } from '../i18n/translations'
 import { Container } from './Container'
@@ -8,6 +10,25 @@ interface HeaderProps {
 
 export function Header({ simple = false }: HeaderProps) {
   const { language, setLanguage } = useLanguage()
+  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setLanguageDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <header className="glass sticky top-0 z-50 backdrop-blur-xl">
@@ -31,32 +52,86 @@ export function Header({ simple = false }: HeaderProps) {
           </div>
 
           {/* Right - Language Toggle (always show) */}
-          <div
-            className="flex gap-1 rounded p-1"
-            style={{ background: '#1E2329' }}
-          >
+          <div className="relative" ref={dropdownRef}>
             <button
-              onClick={() => setLanguage('zh')}
-              className="px-3 py-1.5 rounded text-xs font-semibold transition-all"
-              style={
-                language === 'zh'
-                  ? { background: '#F0B90B', color: '#000' }
-                  : { background: 'transparent', color: '#848E9C' }
+              onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
+              className="flex items-center gap-2 px-3 py-2 rounded transition-colors hover:text-white"
+              style={{ color: '#848E9C' }}
+              onMouseEnter={(e) =>
+              (e.currentTarget.style.background =
+                'rgba(255, 255, 255, 0.05)')
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = 'transparent')
               }
             >
-              中文
+              <Globe className="w-5 h-5" />
             </button>
-            <button
-              onClick={() => setLanguage('en')}
-              className="px-3 py-1.5 rounded text-xs font-semibold transition-all"
-              style={
-                language === 'en'
-                  ? { background: '#F0B90B', color: '#000' }
-                  : { background: 'transparent', color: '#848E9C' }
-              }
-            >
-              EN
-            </button>
+
+            {languageDropdownOpen && (
+              <div
+                className="absolute right-0 top-full mt-2 w-32 rounded-lg shadow-lg overflow-hidden z-50"
+                style={{
+                  background: '#1E2329',
+                  border: '1px solid #2B3139',
+                }}
+              >
+                <button
+                  onClick={() => {
+                    setLanguage('zh')
+                    setLanguageDropdownOpen(false)
+                  }}
+                  className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'zh' ? '' : 'hover:opacity-80'
+                    }`}
+                  style={{
+                    color: '#EAECEF',
+                    background:
+                      language === 'zh'
+                        ? 'rgba(240, 185, 11, 0.1)'
+                        : 'transparent',
+                  }}
+                >
+                  <span className="text-base">🇨🇳</span>
+                  <span className="text-sm">中文</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setLanguage('en')
+                    setLanguageDropdownOpen(false)
+                  }}
+                  className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'en' ? '' : 'hover:opacity-80'
+                    }`}
+                  style={{
+                    color: '#EAECEF',
+                    background:
+                      language === 'en'
+                        ? 'rgba(240, 185, 11, 0.1)'
+                        : 'transparent',
+                  }}
+                >
+                  <span className="text-base">🇺🇸</span>
+                  <span className="text-sm">English</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setLanguage('ja')
+                    setLanguageDropdownOpen(false)
+                  }}
+                  className={`w-full flex items-center gap-2 px-3 py-2 transition-colors ${language === 'ja' ? '' : 'hover:opacity-80'
+                    }`}
+                  style={{
+                    color: '#EAECEF',
+                    background:
+                      language === 'ja'
+                        ? 'rgba(240, 185, 11, 0.1)'
+                        : 'transparent',
+                  }}
+                >
+                  <span className="text-base">ja</span>
+                  <span className="text-sm">ja</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </Container>
