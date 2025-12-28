@@ -15,7 +15,7 @@ import (
 	"nofx/market"
 	"nofx/provider/coinank/coinank_api"
 	"nofx/provider/coinank/coinank_enum"
-	"nofx/store"
+	"nofx/store"    
 	"nofx/trader"
 	"strconv"
 	"strings"

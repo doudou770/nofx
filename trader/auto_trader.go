@@ -1878,8 +1878,8 @@ func (at *AutoTrader) recordAndConfirmOrder(orderResult map[string]interface{}, 
 				}
 				return
 			}
+			time.Sleep(500 * time.Millisecond)
 		}
-		time.Sleep(500 * time.Millisecond)
 	}
 
 	// Normalize symbol for position record consistency
@@ -2025,6 +2025,119 @@ func (at *AutoTrader) recordOrderFill(orderRecordID int64, exchangeOrderID, symb
 		TraderID:         at.id,
 		ExchangeID:       at.exchangeID,
 		ExchangeType:     at.exchange,
+		OrderID:          orderRecordID,
+		ExchangeOrderID:  exchangeOrderID,
+		ExchangeTradeID:  tradeID,
+		Symbol:           normalizedSymbol,
+		Side:             side,
+		Price:            price,
+		Quantity:         quantity,
+		QuoteQuantity:    price * quantity,
+		Commission:       fee,
+		CommissionAsset:  "USDT",
+		RealizedPnL:      0, // Will be calculated for close orders
+		IsMaker:          false, // Market orders are usually taker
+		CreatedAt:        time.Now(),
+	}
+
+	// Calculate realized PnL for close orders
+	if action == "close_long" || action == "close_short" {
+		// Try to get the entry price from the open position
+		var positionSide string
+		if action == "close_long" {
+			positionSide = "LONG"
+		} else {
+			positionSide = "SHORT"
+		}
+
+		if openPos, err := at.store.Position().GetOpenPositionBySymbol(at.id, symbol, positionSide); err == nil && openPos != nil {
+			if positionSide == "LONG" {
+				fill.RealizedPnL = (price - openPos.EntryPrice) * quantity
+			} else {
+				fill.RealizedPnL = (openPos.EntryPrice - price) * quantity
+			}
+		}
+	}
+
+	if err := at.store.Order().CreateFill(fill); err != nil {
+		logger.Infof("  ⚠️ Failed to record fill: %v", err)
+	} else {
+		logger.Infof("  📋 Fill recorded: %.4f @ %.6f, fee: %.4f", quantity, price, fee)
+	}
+}
+
+// createOrderRecord creates an order record struct from order details
+func (at *AutoTrader) createOrderRecord(orderID, symbol, action, positionSide string, quantity, price float64, leverage int) *store.TraderOrder {
+	// Determine order type (market for auto trader)
+	orderType := "MARKET"
+
+	// Determine side (BUY/SELL)
+	var side string
+	switch action {
+	case "open_long", "close_short":
+		side = "BUY"
+	case "open_short", "close_long":
+		side = "SELL"
+	}
+
+	// Use action as orderAction directly (keep lowercase format)
+	orderAction := action
+
+	// Determine if it's a reduce only order
+	reduceOnly := (action == "close_long" || action == "close_short")
+
+	// Normalize symbol for consistency
+	normalizedSymbol := market.Normalize(symbol)
+
+	return &store.TraderOrder{
+		TraderID:        at.id,
+		ExchangeID:      at.exchange,
+		ExchangeOrderID: orderID,
+		Symbol:          normalizedSymbol,
+		Side:            side,
+		PositionSide:    positionSide,
+		Type:            orderType,
+		TimeInForce:     "GTC",
+		Quantity:        quantity,
+		Price:           price,
+		Status:          "NEW",
+		FilledQuantity:  0,
+		AvgFillPrice:    0,
+		Commission:      0,
+		CommissionAsset: "USDT",
+		Leverage:        leverage,
+		ReduceOnly:      reduceOnly,
+		ClosePosition:   reduceOnly,
+		OrderAction:     orderAction,
+		CreatedAt:       time.Now(),
+		UpdatedAt:       time.Now(),
+	}
+}
+
+// recordOrderFill records order fill/trade details
+func (at *AutoTrader) recordOrderFill(orderRecordID int64, exchangeOrderID, symbol, action string, price, quantity, fee float64) {
+	if at.store == nil {
+		return
+	}
+
+	// Determine side (BUY/SELL)
+	var side string
+	switch action {
+	case "open_long", "close_short":
+		side = "BUY"
+	case "open_short", "close_long":
+		side = "SELL"
+	}
+
+	// Generate a simple trade ID (exchange doesn't always provide one)
+	tradeID := fmt.Sprintf("%s-%d", exchangeOrderID, time.Now().UnixNano())
+
+	// Normalize symbol for consistency
+	normalizedSymbol := market.Normalize(symbol)
+
+	fill := &store.TraderFill{
+		TraderID:         at.id,
+		ExchangeID:       at.exchange,
 		OrderID:          orderRecordID,
 		ExchangeOrderID:  exchangeOrderID,
 		ExchangeTradeID:  tradeID,
