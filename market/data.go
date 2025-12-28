@@ -25,7 +25,6 @@ type FundingRateCache struct {
 var (
 	fundingRateMap sync.Map // map[string]*FundingRateCache
 	frCacheTTL     = 1 * time.Hour
-	coinankClient  *coinank.CoinankClient // Global CoinAnk client for kline data
 )
 
 // Note: Kline data now uses free/open API (coinank_api.Kline) which doesn't require authentication
