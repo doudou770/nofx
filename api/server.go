@@ -13,9 +13,9 @@ import (
 	"nofx/logger"
 	"nofx/manager"
 	"nofx/market"
-	"nofx/provider/coinank"
+	"nofx/provider/coinank/coinank_api"
 	"nofx/provider/coinank/coinank_enum"
-	"nofx/store"
+	"nofx/store"    
 	"nofx/trader"
 	"strconv"
 	"strings"
@@ -1340,7 +1340,7 @@ func (s *Server) handleClosePosition(c *gin.Context) {
 	logger.Infof("✅ Position closed successfully: symbol=%s, side=%s, qty=%.6f, result=%v", req.Symbol, req.Side, posQty, result)
 
 	// Record order to database (for chart markers and history)
-	s.recordClosePositionOrder(traderID, exchangeCfg.ExchangeType, req.Symbol, req.Side, posQty, entryPrice, result)
+	s.recordClosePositionOrder(traderID, exchangeCfg.ID, exchangeCfg.ExchangeType, req.Symbol, req.Side, posQty, entryPrice, result)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Position closed successfully",
@@ -1351,7 +1351,14 @@ func (s *Server) handleClosePosition(c *gin.Context) {
 }
 
 // recordClosePositionOrder Record close position order to database (Lighter version - direct FILLED status)
-func (s *Server) recordClosePositionOrder(traderID, exchangeType, symbol, side string, quantity, exitPrice float64, result map[string]interface{}) {
+func (s *Server) recordClosePositionOrder(traderID, exchangeID, exchangeType, symbol, side string, quantity, exitPrice float64, result map[string]interface{}) {
+	// Skip for exchanges with OrderSync - let the background sync handle it to avoid duplicates
+	switch exchangeType {
+	case "binance", "lighter", "hyperliquid", "bybit", "okx", "bitget", "aster":
+		logger.Infof("  📝 Close order will be synced by OrderSync, skipping immediate record")
+		return
+	}
+
 	// Check if order was placed (skip if NO_POSITION)
 	status, _ := result["status"].(string)
 	if status == "NO_POSITION" {
@@ -1396,7 +1403,8 @@ func (s *Server) recordClosePositionOrder(traderID, exchangeType, symbol, side s
 	// Create order record - DIRECTLY as FILLED (Lighter market orders fill immediately)
 	orderRecord := &store.TraderOrder{
 		TraderID:        traderID,
-		ExchangeID:      exchangeType,
+		ExchangeID:      exchangeID,
+		ExchangeType:    exchangeType,
 		ExchangeOrderID: orderID,
 		Symbol:          symbol,
 		PositionSide:    side,
@@ -1425,7 +1433,8 @@ func (s *Server) recordClosePositionOrder(traderID, exchangeType, symbol, side s
 	tradeID := fmt.Sprintf("%s-%d", orderID, time.Now().UnixNano())
 	fillRecord := &store.TraderFill{
 		TraderID:        traderID,
-		ExchangeID:      exchangeType,
+		ExchangeID:      exchangeID,
+		ExchangeType:    exchangeType,
 		OrderID:         orderRecord.ID,
 		ExchangeOrderID: orderID,
 		ExchangeTradeID: tradeID,
@@ -1449,7 +1458,7 @@ func (s *Server) recordClosePositionOrder(traderID, exchangeType, symbol, side s
 }
 
 // pollAndUpdateOrderStatus Poll order status and update with fill data
-func (s *Server) pollAndUpdateOrderStatus(orderRecordID int64, traderID, exchangeType, orderID, symbol, orderAction string, tempTrader trader.Trader) {
+func (s *Server) pollAndUpdateOrderStatus(orderRecordID int64, traderID, exchangeID, exchangeType, orderID, symbol, orderAction string, tempTrader trader.Trader) {
 	var actualPrice float64
 	var actualQty float64
 	var fee float64
@@ -1459,7 +1468,7 @@ func (s *Server) pollAndUpdateOrderStatus(orderRecordID int64, traderID, exchang
 
 	// For Lighter, use GetTrades instead of GetOrderStatus (market orders are filled immediately)
 	if exchangeType == "lighter" {
-		s.pollLighterTradeHistory(orderRecordID, traderID, exchangeType, orderID, symbol, orderAction, tempTrader)
+		s.pollLighterTradeHistory(orderRecordID, traderID, exchangeID, exchangeType, orderID, symbol, orderAction, tempTrader)
 		return
 	}
 
@@ -1499,7 +1508,8 @@ func (s *Server) pollAndUpdateOrderStatus(orderRecordID int64, traderID, exchang
 				tradeID := fmt.Sprintf("%s-%d", orderID, time.Now().UnixNano())
 				fillRecord := &store.TraderFill{
 					TraderID:        traderID,
-					ExchangeID:      exchangeType,
+					ExchangeID:      exchangeID,
+					ExchangeType:    exchangeType,
 					OrderID:         orderRecordID,
 					ExchangeOrderID: orderID,
 					ExchangeTradeID: tradeID,
@@ -1536,7 +1546,7 @@ func (s *Server) pollAndUpdateOrderStatus(orderRecordID int64, traderID, exchang
 
 // pollLighterTradeHistory No longer used - Lighter orders are marked as FILLED immediately
 // Keeping this function stub for compatibility with other exchanges
-func (s *Server) pollLighterTradeHistory(orderRecordID int64, traderID, exchangeType, orderID, symbol, orderAction string, tempTrader trader.Trader) {
+func (s *Server) pollLighterTradeHistory(orderRecordID int64, traderID, exchangeID, exchangeType, orderID, symbol, orderAction string, tempTrader trader.Trader) {
 	// For Lighter, orders are now recorded as FILLED immediately in recordClosePositionOrder
 	// This function is no longer called for Lighter exchange
 	logger.Infof("  ℹ️ pollLighterTradeHistory called but not needed (order already marked FILLED)")
@@ -2311,11 +2321,8 @@ func (s *Server) handleKlines(c *gin.Context) {
 	c.JSON(http.StatusOK, klines)
 }
 
-// getKlinesFromCoinank fetches kline data from coinank API for multiple exchanges
+// getKlinesFromCoinank fetches kline data from coinank free/open API for multiple exchanges
 func (s *Server) getKlinesFromCoinank(symbol, interval, exchange string, limit int) ([]market.Kline, error) {
-	// Import coinank packages
-	coinankClient := coinank.NewCoinankClient(coinank_enum.MainUrl, "0cccbd7992754b67b1848c6746c0fce0")
-
 	// Map exchange string to coinank enum
 	var coinankExchange coinank_enum.Exchange
 	switch strings.ToLower(exchange) {
@@ -2387,12 +2394,34 @@ func (s *Server) getKlinesFromCoinank(symbol, interval, exchange string, limit i
 		return nil, fmt.Errorf("unsupported interval for coinank: %s", interval)
 	}
 
-	// Call coinank API
+	// Convert symbol format for different exchanges
+	// OKX uses "BTC-USDT-SWAP" format instead of "BTCUSDT"
+	apiSymbol := symbol
+	if coinankExchange == coinank_enum.Okex {
+		// Convert BTCUSDT -> BTC-USDT-SWAP
+		if strings.HasSuffix(symbol, "USDT") {
+			base := strings.TrimSuffix(symbol, "USDT")
+			apiSymbol = fmt.Sprintf("%s-USDT-SWAP", base)
+		}
+	}
+
+	// Call coinank free/open API (no authentication required)
 	ctx := context.Background()
-	endTime := time.Now().UnixMilli()
-	coinankKlines, err := coinankClient.Kline(ctx, symbol, coinankExchange, 0, endTime, limit, coinankInterval)
+	ts := time.Now().UnixMilli()
+	// Use "To" side to search backward from current time (get historical klines)
+	coinankKlines, err := coinank_api.Kline(ctx, apiSymbol, coinankExchange, ts, coinank_enum.To, limit, coinankInterval)
 	if err != nil {
-		return nil, fmt.Errorf("coinank API error: %w", err)
+		// Free API doesn't support all exchanges (e.g., OKX, Bitget)
+		// Fallback to Binance data as reference
+		if coinankExchange != coinank_enum.Binance {
+			logger.Warnf("⚠️ CoinAnk free API doesn't support %s, falling back to Binance data", coinankExchange)
+			coinankKlines, err = coinank_api.Kline(ctx, symbol, coinank_enum.Binance, ts, coinank_enum.To, limit, coinankInterval)
+			if err != nil {
+				return nil, fmt.Errorf("coinank API error (fallback): %w", err)
+			}
+		} else {
+			return nil, fmt.Errorf("coinank API error: %w", err)
+		}
 	}
 
 	// Convert coinank kline format to market.Kline format
