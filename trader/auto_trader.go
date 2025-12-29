@@ -2194,4 +2194,3 @@ func getSideFromAction(action string) string {
 		return "BUY"
 	}
 }
-
