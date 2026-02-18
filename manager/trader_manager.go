@@ -292,8 +292,8 @@ func (tm *TraderManager) getConcurrentTraderData(traders []*trader.AutoTrader) [
 	// Concurrently fetch data for each trader
 	for i, t := range traders {
 		go func(index int, trader *trader.AutoTrader) {
-			// Set timeout to 3 seconds for single trader
-			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			// Set timeout to 10 seconds for single trader (increased from 3s for DEX reliability)
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
 
 			// Use channel for timeout control
@@ -330,7 +330,7 @@ func (tm *TraderManager) getConcurrentTraderData(traders []*trader.AutoTrader) [
 				}
 			case err := <-errorChan:
 				// Failed to get account info
-				logger.Infof("⚠️ Failed to get account info for trader %s: %v", trader.GetID(), err)
+				logger.Infof("⚠️ Failed to get account info for trader %s (%s/%s): %v", trader.GetName(), trader.GetID(), trader.GetExchange(), err)
 				traderData = map[string]interface{}{
 					"trader_id":              trader.GetID(),
 					"trader_name":            trader.GetName(),
@@ -347,7 +347,7 @@ func (tm *TraderManager) getConcurrentTraderData(traders []*trader.AutoTrader) [
 				}
 			case <-ctx.Done():
 				// Timeout
-				logger.Infof("⏰ Timeout getting account info for trader %s", trader.GetID())
+				logger.Infof("⏰ Timeout (10s) getting account info for trader %s (%s/%s)", trader.GetName(), trader.GetID(), trader.GetExchange())
 				traderData = map[string]interface{}{
 					"trader_id":              trader.GetID(),
 					"trader_name":            trader.GetName(),
@@ -690,6 +690,13 @@ func (tm *TraderManager) addTraderFromStore(traderCfg *store.Trader, aiModelCfg 
 		traderConfig.BitgetAPIKey = string(exchangeCfg.APIKey)
 		traderConfig.BitgetSecretKey = string(exchangeCfg.SecretKey)
 		traderConfig.BitgetPassphrase = string(exchangeCfg.Passphrase)
+	case "gate":
+		traderConfig.GateAPIKey = string(exchangeCfg.APIKey)
+		traderConfig.GateSecretKey = string(exchangeCfg.SecretKey)
+	case "kucoin":
+		traderConfig.KuCoinAPIKey = string(exchangeCfg.APIKey)
+		traderConfig.KuCoinSecretKey = string(exchangeCfg.SecretKey)
+		traderConfig.KuCoinPassphrase = string(exchangeCfg.Passphrase)
 	case "hyperliquid":
 		traderConfig.HyperliquidPrivateKey = string(exchangeCfg.APIKey)
 		traderConfig.HyperliquidWalletAddr = exchangeCfg.HyperliquidWalletAddr
